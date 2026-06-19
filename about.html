@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Maxim Broadcast - Guía de Inicio y Tutoriales</title>
+    <meta name="description" content="Aprende a usar Maxim Broadcast para OBS Studio. Guías paso a paso, tutoriales de playout, transmisión SRT y soporte oficial de luisitoys12.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS Estilos -->
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary-accent: #00d2ff;
+            --primary-glow: rgba(0, 210, 255, 0.4);
+            --secondary-accent: #7928ca;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient glows */
+        .ambient-glow-top {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.2) 0%, rgba(11, 12, 16, 0) 70%);
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand-logo img {
+            height: 40px;
+            display: block;
+        }
+
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-accent);
+        }
+
+        /* Main Welcome Section */
+        .welcome-section {
+            padding: 60px 0 40px 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 40%, #a5f3fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-desc {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Creator Panel */
+        .creator-panel {
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.00) 100%);
+            border: 1px solid var(--card-border);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .creator-avatar {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0, 210, 255, 0.1);
+            border: 1px solid var(--primary-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-accent);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+        }
+
+        .creator-info h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .creator-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Section Headings */
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+            color: #ffffff;
+        }
+
+        /* Tutorials Section */
+        .tutorials-section {
+            margin-bottom: 60px;
+        }
+
+        .tutorial-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-card:hover {
+            border-color: rgba(0, 210, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .tutorial-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tutorial-tag {
+            background-color: rgba(0, 210, 255, 0.1);
+            color: var(--primary-accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tutorial-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .tutorial-card p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .steps-list {
+            list-style-type: none;
+        }
+
+        .steps-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .steps-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary-accent);
+            font-weight: 800;
+        }
+
+        code {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        footer a {
+            color: var(--primary-accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow-top"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo">
+                <img src="media/icon.png" alt="Maxim Broadcast Logo">
+                <span class="brand-name">MAXIM BROADCAST</span>
+            </a>
+            <a href="index.html" class="btn-back">
+                &larr; Volver al Inicio
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="padding-top: 40px;">
+        
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1>Sobre Maxim Broadcast</h1>
+            <p class="welcome-desc">Bienvenido a la suite oficial de playout, transmisión y efectos visuales de Maxim Broadcast. Diseñada para ofrecer máxima estabilidad y rendimiento profesional en OBS Studio.</p>
+        </section>
+
+        <!-- Creator Panel -->
+        <div class="creator-panel">
+            <div class="creator-avatar">L</div>
+            <div class="creator-info">
+                <h3>Soporte y Desarrollo por luisitoys12</h3>
+                <p>Este plugin y su aplicación de playout son creados y mantenidos exclusivamente de forma independiente por <b>luisitoys12</b>. No contamos con redes sociales externas ni intermediarios.</p>
+            </div>
+        </div>
+
+        <!-- Tutorials Section -->
+        <section class="tutorials-section">
+            <h2>Sección de Tutoriales</h2>
+
+            <!-- Tutorial 1 -->
+            <div class="tutorial-card">
+                <div class="tutorial-header">
+                    <span class="tutorial-tag">Tutorial 1</span>
+                    <h3>Cómo usar el Playout Integrado (MaximPlayout.exe)</h3>
+                </div>
+                <p>La herramienta de playout te permite transmitir clips de video directamente a tus fuentes en directo sin consumir recursos del lienzo principal de OBS.</p>
+                <ul class="steps-list">
+                    <li>Asegúrate de que la función <b>OBS WebSocket</b> esté activada en OBS (Menú superior: Herramientas -> Configuración del servidor WebSocket).</li>
+                    <li>Abre <code>MaximPlayout.exe</code> desde el acceso directo generado en tu Escritorio.</li>
+                    <li>Ingresa la contraseña de WebSocket configurada en tu OBS y haz clic en <b>Conectar</b>.</li>
+                    <li>Carga tu lista de clips multimedia y contrólalos fácilmente desde la interfaz oscura de Playout.</li>
+                </ul>
+            </div>
+
+            <!-- Tutorial 2 -->
+            <div class="tutorial-card">
+                <div class="tutorial-header">
+                    <span class="tutorial-tag">Tutorial 2</span>
+                    <h3>Aplicación de Filtros y Efectos en OBS</h3>
+                </div>
+                <p>Maxim Broadcast añade capacidades de post-procesamiento de imagen avanzado directamente en los filtros de OBS Studio.</p>
+                <ul class="steps-list">
+                    <li>Haz clic derecho sobre cualquier Fuente o Escena en OBS y selecciona <b>Filtros</b>.</li>
+                    <li>Haz clic en el icono <b>+</b> (añadir filtro) en la sección de filtros de efecto.</li>
+                    <li>Selecciona filtros nativos avanzados como <b>Desenfocar (Blur)</b>, <b>Transformación 3D</b> o <b>Corrección de Color</b>.</li>
+                    <li>Ajusta los parámetros con el panel integrado. Todos los cálculos se realizan de manera optimizada.</li>
+                </ul>
+            </div>
+
+            <!-- Tutorial 3 -->
+            <div class="tutorial-card">
+                <div class="tutorial-header">
+                    <span class="tutorial-tag">Tutorial 3</span>
+                    <h3>Transmisión SRT mediante Túneles de Red</h3>
+                </div>
+                <p>Envía vídeo con latencia extremadamente baja desde cámaras o teléfonos externos mediante túneles seguros utilizando el protocolo SRT.</p>
+                <ul class="steps-list">
+                    <li>Crea una fuente en OBS de tipo <b>Media Source</b> (Fuente multimedia).</li>
+                    <li>Desmarca la opción "Archivo local".</li>
+                    <li>En el campo de entrada, define la URL de SRT provista por tu túnel, por ejemplo: <code>srt://127.0.0.1:9000?mode=listener</code>.</li>
+                    <li>Utiliza un gestor de túneles (como <b>ngrok</b>) en caso de que desees recibir señales desde fuera de tu red local, redirigiendo el puerto del socket de SRT.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Maxim Broadcast. Desarrollado por <a href="https://github.com/luisitoys12" target="_blank" rel="noopener">luisitoys12</a>.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
