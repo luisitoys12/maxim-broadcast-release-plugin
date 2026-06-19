@@ -497,9 +497,104 @@
             border-radius: 6px;
             font-size: 13px;
         }
+
+        /* Drawer handle (only on mobile) */
+        .drawer-handle {
+            display: none;
+            height: 40px;
+            background: #18181b;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                height: 50px;
+                padding: 0 10px;
+            }
+            .logo {
+                font-size: 16px;
+            }
+            .actions-top {
+                gap: 6px;
+            }
+            .actions-top .btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            .workspace {
+                flex-direction: column;
+                height: calc(100vh - 50px);
+                overflow: hidden;
+            }
+            .sidebar {
+                width: 100%;
+                height: 50px;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0 10px;
+                gap: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                order: 2; /* Bottom toolbar */
+            }
+            .tool-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            .tool-btn::after {
+                display: none;
+            }
+            main {
+                flex: 1;
+                padding: 10px;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                order: 1;
+            }
+            .control-panel {
+                position: fixed;
+                bottom: 50px; /* Leave space for sidebar bottom toolbar */
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 320px;
+                background-color: #0e0e11;
+                border-left: none;
+                border-top: 2px solid var(--border-color);
+                transform: translateY(280px); /* Collapsed */
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 1000;
+            }
+            .control-panel.open {
+                transform: translateY(0);
+            }
+            .drawer-handle {
+                display: flex;
+            }
+            .panel-section {
+                padding: 12px 15px;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Desktop Download App Banner -->
+    <div id="desktop-app-banner" style="display: none; background: linear-gradient(90deg, #7928ca, #00d2ff); color: #fff; padding: 8px 20px; font-size: 13px; font-weight: 600; text-align: center; position: relative; z-index: 2000;">
+        ✨ ¡Estás en la versión web! Para diseñar zócalos con la mejor velocidad y exportar en PC, descarga la app nativa: 
+        <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximEditor.exe" style="color: #fff; text-decoration: underline; margin-left: 8px; font-weight: 700;">Descargar Maxim Editor (.exe)</a>
+        <button onclick="closeAppBanner()" style="background: none; border: none; color: #fff; float: right; font-size: 16px; cursor: pointer; font-weight: bold; padding: 0 5px;">×</button>
+    </div>
 
     <!-- Header -->
     <header>
@@ -540,7 +635,11 @@
         </main>
 
         <!-- Right Control Panel -->
-        <div class="control-panel">
+        <div class="control-panel" id="control-panel">
+            <!-- Mobile Handle -->
+            <div class="drawer-handle" onclick="toggleMobileDrawer()">
+                <span id="drawer-toggle-text">🔼 Mostrar Propiedades y Capas</span>
+            </div>
             <!-- Properties Section -->
             <div class="panel-section" id="section-properties" style="display: none;">
                 <h3>Propiedades de Capa</h3>
@@ -706,6 +805,7 @@
 
         // Initialize App
         window.addEventListener('load', () => {
+            checkBanner();
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('live') || urlParams.has('obs')) {
                 document.body.classList.add('obs-live-mode');
@@ -878,6 +978,7 @@
                 // Add drag listeners
                 if (!document.body.classList.contains('obs-live-mode')) {
                     el.addEventListener('mousedown', (e) => startDrag(e, layer.id));
+                    el.addEventListener('touchstart', (e) => startDrag(e, layer.id), { passive: false });
                 }
 
                 canvas.appendChild(el);
@@ -986,6 +1087,15 @@
                 document.getElementById('shape-height').value = layer.height;
                 document.getElementById('shape-radius').value = layer.radius;
             }
+
+            // Auto-open drawer on mobile
+            if (window.innerWidth <= 768) {
+                const drawer = document.getElementById('control-panel');
+                if (drawer && !drawer.classList.contains('open')) {
+                    drawer.classList.add('open');
+                    document.getElementById('drawer-toggle-text').innerText = '🔽 Ocultar Panel';
+                }
+            }
         }
 
         function hideProperties() {
@@ -1028,7 +1138,8 @@
         // Dragging Logic
         function startDrag(e, id) {
             if (activeTool !== 'select') return;
-            e.preventDefault();
+            // Prevent scrolling on touch
+            if (e.cancelable) e.preventDefault();
             selectedLayerId = id;
             selectLayer(id);
 
@@ -1036,8 +1147,12 @@
             if (!layer) return;
 
             isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            startX = clientX;
+            startY = clientY;
 
             // Get viewport scale factor
             const container = document.getElementById('canvas-container');
@@ -1048,10 +1163,12 @@
             dragOffsetX = layer.x;
             dragOffsetY = layer.y;
 
-            const onMouseMove = (ev) => {
+            const onMove = (ev) => {
                 if (!isDragging) return;
-                const dx = (ev.clientX - startX) / scale;
-                const dy = (ev.clientY - startY) / scale;
+                const currentX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+                const currentY = ev.touches ? ev.touches[0].clientY : ev.clientY;
+                const dx = (currentX - startX) / scale;
+                const dy = (currentY - startY) / scale;
                 layer.x = Math.round(dragOffsetX + dx);
                 layer.y = Math.round(dragOffsetY + dy);
 
@@ -1063,14 +1180,18 @@
                 }
             };
 
-            const onMouseUp = () => {
+            const onEnd = () => {
                 isDragging = false;
-                window.removeEventListener('mousemove', onMouseMove);
-                window.removeEventListener('mouseup', onMouseUp);
+                window.removeEventListener('mousemove', onMove);
+                window.removeEventListener('mouseup', onEnd);
+                window.removeEventListener('touchmove', onMove);
+                window.removeEventListener('touchend', onEnd);
             };
 
-            window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('mouseup', onMouseUp);
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+            window.addEventListener('touchmove', onMove, { passive: false });
+            window.addEventListener('touchend', onEnd);
         }
 
         // Simulated AI Style Generator
@@ -1254,6 +1375,35 @@
 
         function closeDialogs() {
             document.querySelectorAll('.dialog-overlay').forEach(d => d.classList.remove('active'));
+        }
+
+        // Responsive and app helpers
+        function checkBanner() {
+            const isWebView = window.chrome && window.chrome.webview;
+            const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+            const bannerClosed = localStorage.getItem('maxim-banner-closed') === 'true';
+
+            if (!isWebView && !isMobile && !bannerClosed) {
+                document.getElementById('desktop-app-banner').style.display = 'block';
+            }
+        }
+
+        function closeAppBanner() {
+            document.getElementById('desktop-app-banner').style.display = 'none';
+            localStorage.setItem('maxim-banner-closed', 'true');
+        }
+
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('control-panel');
+            const toggleText = document.getElementById('drawer-toggle-text');
+            if (drawer) {
+                drawer.classList.toggle('open');
+                if (drawer.classList.contains('open')) {
+                    toggleText.innerText = '🔽 Ocultar Panel';
+                } else {
+                    toggleText.innerText = '🔼 Mostrar Propiedades y Capas';
+                }
+            }
         }
     </script>
 </body>
