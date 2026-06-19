@@ -1,0 +1,4 @@
+*.pdb
+*.xml
+*.WebView2/
+MaximEditor.exe.WebView2/

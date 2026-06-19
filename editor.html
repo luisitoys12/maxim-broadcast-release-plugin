@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxim Editor - Diseñador de Overlays y Lower Thirds</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121214;
+            --panel-bg: rgba(30, 30, 36, 0.85);
+            --border-color: #2d2d30;
+            --accent-blue: #00d2ff;
+            --accent-green: #30d158;
+            --accent-red: #ff453a;
+            --text-color: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* OBS Live Mode (Clean overlay output) */
+        body.obs-live-mode {
+            background: transparent !important;
+            overflow: hidden;
+        }
+        body.obs-live-mode header,
+        body.obs-live-mode .sidebar,
+        body.obs-live-mode .control-panel {
+            display: none !important;
+        }
+        body.obs-live-mode main {
+            padding: 0 !important;
+            justify-content: center;
+            align-items: center;
+        }
+        body.obs-live-mode .canvas-container {
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            transform: none !important;
+        }
+        body.obs-live-mode #canvas {
+            width: 1920px !important;
+            height: 1080px !important;
+            transform-origin: top left;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* Main Header */
+        header {
+            height: 60px;
+            background-color: #0b0b0d;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 400;
+            background: var(--border-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .actions-top {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background-color: #1e1e24;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            border-color: var(--accent-blue);
+            background-color: #2a2a32;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #000000;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #5ce1ff;
+        }
+
+        .btn-green {
+            background-color: var(--accent-green);
+            color: #000000;
+            border: none;
+        }
+
+        .btn-green:hover {
+            background-color: #6eff93;
+        }
+
+        /* Editor Layout */
+        .workspace {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        /* Sidebar Toolbar */
+        .sidebar {
+            width: 70px;
+            background-color: #0e0e11;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 16px;
+            z-index: 5;
+        }
+
+        .tool-btn {
+            width: 44px;
+            height: 44px;
+            background-color: #1e1e24;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .tool-btn:hover, .tool-btn.active {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            background-color: #25252e;
+        }
+
+        .tool-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 80px;
+            background: #1e1e24;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 100;
+        }
+
+        .tool-btn:hover::after {
+            opacity: 1;
+        }
+
+        /* Center Canvas Area */
+        main {
+            flex: 1;
+            background-color: #0a0a0c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            overflow: auto;
+        }
+
+        .canvas-container {
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            background-image: 
+                linear-gradient(45deg, #18181b 25%, transparent 25%), 
+                linear-gradient(-45deg, #18181b 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #18181b 75%), 
+                linear-gradient(-45deg, transparent 75%, #18181b 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        #canvas {
+            width: 1920px;
+            height: 1080px;
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        /* Properties Control Panel */
+        .control-panel {
+            width: 320px;
+            background-color: #0e0e11;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .panel-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: #1e1e24;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-blue);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* AI Prompt Box */
+        .ai-prompt-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ai-textarea {
+            height: 60px;
+            resize: none;
+        }
+
+        /* Layer List UI */
+        .layer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .layer-item {
+            background-color: #1e1e24;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .layer-item.active {
+            border-color: var(--accent-blue);
+            background-color: #25252e;
+        }
+
+        .layer-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .layer-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .layer-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px;
+            font-size: 14px;
+        }
+
+        .layer-action-btn:hover {
+            color: #ffffff;
+        }
+
+        /* Canvas Draggable Elements */
+        .canvas-element {
+            position: absolute;
+            cursor: move;
+            outline: 1px dashed transparent;
+            box-sizing: border-box;
+        }
+
+        .canvas-element:hover {
+            outline: 1px dashed rgba(0, 210, 255, 0.5);
+        }
+
+        .canvas-element.selected {
+            outline: 2px solid var(--accent-blue);
+        }
+
+        /* Lower Third Container Layer */
+        .lower-third-bg {
+            border-radius: 12px;
+            background: rgba(30, 30, 36, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Animations Stylesheet */
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutLeft {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes zoomOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.8); opacity: 0; }
+        }
+
+        /* Applied entry/exit classes */
+        .anim-entry-slideLeft { animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .anim-exit-slideLeft { animation: slideOutLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .anim-entry-slideRight { animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .anim-exit-slideRight { animation: slideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .anim-entry-fade { animation: fadeIn 0.6s ease forwards; }
+        .anim-exit-fade { animation: fadeOut 0.6s ease forwards; }
+        .anim-entry-zoom { animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .anim-exit-zoom { animation: zoomOut 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Dialog overlays */
+        .dialog-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .dialog-overlay.active {
+            opacity: 1; pointer-events: all;
+        }
+        .dialog-box {
+            background: #1e1e24;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .dialog-box h2 {
+            margin-top: 0;
+            color: var(--accent-blue);
+        }
+        .dialog-box p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .copy-box {
+            display: flex;
+            margin: 20px 0;
+            gap: 10px;
+        }
+        .copy-box input {
+            flex: 1;
+            background: #0e0e11;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            MAXIM EDITOR <span>BETA</span>
+        </div>
+        <div class="actions-top">
+            <button class="btn btn-green" id="btn-play-preview" onclick="playPreview()">
+                ▶ Reproducir Entrada
+            </button>
+            <button class="btn" onclick="exportPNG()">
+                📥 Descargar PNG
+            </button>
+            <button class="btn btn-primary" onclick="showObsLink()">
+                🔗 Copiar Enlace OBS
+            </button>
+        </div>
+    </header>
+
+    <!-- Workspace -->
+    <div class="workspace">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="tool-btn active" data-tooltip="Selección (Puntero)" onclick="setTool('select')">🖱</button>
+            <button class="tool-btn" data-tooltip="Añadir Título principal" onclick="addTextLayer('Título Principal', 120, 850, 48, '#00d2ff', 'Outfit', true)">T+</button>
+            <button class="tool-btn" data-tooltip="Añadir Subtítulo" onclick="addTextLayer('Subtítulo o Cargo', 120, 915, 24, '#ffffff', 'Inter', false)">t+</button>
+            <button class="tool-btn" data-tooltip="Añadir Fondo Lower Third" onclick="addShapeLayer()">⬜</button>
+            <button class="tool-btn" data-tooltip="Limpiar Todo" onclick="clearCanvas()" style="margin-top: auto; border-color: var(--accent-red); color: var(--accent-red);">🗑</button>
+        </div>
+
+        <!-- Canvas Viewport -->
+        <main>
+            <div class="canvas-container" id="canvas-container">
+                <div id="canvas">
+                    <!-- Dynamic layers will go here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Control Panel -->
+        <div class="control-panel">
+            <!-- Properties Section -->
+            <div class="panel-section" id="section-properties" style="display: none;">
+                <h3>Propiedades de Capa</h3>
+                
+                <div class="form-group" id="group-text-input">
+                    <label>Texto:</label>
+                    <input type="text" class="form-control" id="prop-text" oninput="updateSelectedLayer()">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Color:</label>
+                        <input type="color" class="form-control" id="prop-color" oninput="updateSelectedLayer()" style="padding:2px; height:34px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Tamaño (px):</label>
+                        <input type="number" class="form-control" id="prop-size" oninput="updateSelectedLayer()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Fuente:</label>
+                    <select class="form-control" id="prop-font" onchange="updateSelectedLayer()">
+                        <option value="Outfit">Outfit (Moderna)</option>
+                        <option value="Inter">Inter (Limpia)</option>
+                        <option value="Segoe UI">Segoe UI</option>
+                        <option value="Impact">Impact (Fuerte)</option>
+                        <option value="Courier New">Courier New (Monospaced)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Efectos:</label>
+                    <label style="display:flex; align-items:center; gap:8px; font-size:13px; text-transform:none; color:#fff; cursor:pointer;">
+                        <input type="checkbox" id="prop-glow" onchange="updateSelectedLayer()">
+                        Brillo de Neón (Glow)
+                    </label>
+                </div>
+            </div>
+
+            <!-- Shape Properties -->
+            <div class="panel-section" id="section-shape-properties" style="display: none;">
+                <h3>Fondo del Zócalo</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ancho (px):</label>
+                        <input type="number" class="form-control" id="shape-width" oninput="updateSelectedShape()">
+                    </div>
+                    <div class="form-group">
+                        <label>Alto (px):</label>
+                        <input type="number" class="form-control" id="shape-height" oninput="updateSelectedShape()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Redondeado (px):</label>
+                    <input type="number" class="form-control" id="shape-radius" oninput="updateSelectedShape()">
+                </div>
+            </div>
+
+            <!-- AI Generator Section -->
+            <div class="panel-section">
+                <h3>IA Generador de Estilos</h3>
+                <div class="ai-prompt-container">
+                    <label>Prompt de Estilo:</label>
+                    <textarea class="form-control ai-textarea" id="ai-prompt" placeholder="Ej: neon cyberpunk, fuego rojo, tecnologia azul y plata..."></textarea>
+                    <button class="btn btn-primary" onclick="generateAIStyle()" style="width:100%; justify-content:center;">
+                        ✨ Generar Estilo con IA
+                    </button>
+                </div>
+            </div>
+
+            <!-- Animation Settings -->
+            <div class="panel-section">
+                <h3>Transiciones & Animación</h3>
+                <div class="form-group">
+                    <label>Entrada:</label>
+                    <select class="form-control" id="anim-entry" onchange="updateAnimationSettings()">
+                        <option value="slideLeft">Deslizar desde Izquierda</option>
+                        <option value="slideRight">Deslizar desde Derecha</option>
+                        <option value="fade">Desvanecer (Fade)</option>
+                        <option value="zoom">Acercamiento (Zoom)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Salida:</label>
+                    <select class="form-control" id="anim-exit" onchange="updateAnimationSettings()">
+                        <option value="slideLeft">Deslizar hacia Izquierda</option>
+                        <option value="slideRight">Deslizar hacia Derecha</option>
+                        <option value="fade">Desvanecer (Fade)</option>
+                        <option value="zoom">Alejamiento (Zoom)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Layer List Section -->
+            <div class="panel-section" style="flex: 1;">
+                <h3>Capas (Layers)</h3>
+                <div class="layer-list" id="layers-container">
+                    <!-- Layers item list dynamic -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copy Link Dialog -->
+    <div class="dialog-overlay" id="dialog-obs">
+        <div class="dialog-box">
+            <h2>Enlace de OBS Studio</h2>
+            <p>Agrega este enlace como una <b>Fuente de Navegador (Browser Source)</b> en tu escena de OBS Studio con ancho 1920 y alto 1080.</p>
+            <div class="copy-box">
+                <input type="text" id="obs-url-input" readonly>
+                <button class="btn btn-primary" onclick="copyObsUrl()">Copiar</button>
+            </div>
+            <button class="btn" style="margin:auto;" onclick="closeDialogs()">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        let layers = [];
+        let selectedLayerId = null;
+        let activeTool = 'select';
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let dragOffsetX = 0, dragOffsetY = 0;
+
+        let animationSettings = {
+            entry: 'slideLeft',
+            exit: 'slideLeft',
+            duration: 0.8
+        };
+
+        // Scale Canvas dynamically
+        function scaleCanvas() {
+            const container = document.getElementById('canvas-container');
+            const main = document.querySelector('main');
+            const targetW = 1920;
+            const targetH = 1080;
+            
+            // Check if live mode
+            if (document.body.classList.contains('obs-live-mode')) {
+                const scaleX = window.innerWidth / targetW;
+                const scaleY = window.innerHeight / targetH;
+                const scale = Math.min(scaleX, scaleY);
+                document.getElementById('canvas').style.transform = `scale(${scale})`;
+                return;
+            }
+
+            const padding = 80;
+            const availableW = main.clientWidth - padding;
+            const availableH = main.clientHeight - padding;
+
+            const scaleX = availableW / targetW;
+            const scaleY = availableH / targetH;
+            const scale = Math.min(scaleX, scaleY);
+
+            container.style.transform = `scale(${scale})`;
+            container.style.transformOrigin = 'center center';
+            container.style.width = `${targetW}px`;
+            container.style.height = `${targetH}px`;
+        }
+
+        window.addEventListener('resize', scaleCanvas);
+
+        // Initialize App
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('live') || urlParams.has('obs')) {
+                document.body.classList.add('obs-live-mode');
+                // Load URL settings if any
+                const dataParam = urlParams.get('data');
+                if (dataParam) {
+                    try {
+                        const parsed = JSON.parse(decodeURIComponent(dataParam));
+                        layers = parsed.layers;
+                        animationSettings = parsed.animations;
+                    } catch(e) {
+                        loadDefaults();
+                    }
+                } else {
+                    loadDefaults();
+                }
+                renderCanvas();
+                // Play intro automatically in OBS
+                setTimeout(playPreview, 500);
+            } else {
+                loadDefaults();
+                renderCanvas();
+                renderLayerList();
+                scaleCanvas();
+            }
+            scaleCanvas();
+        });
+
+        function loadDefaults() {
+            layers = [
+                {
+                    id: 'layer-bg',
+                    type: 'shape',
+                    name: 'Fondo Zócalo',
+                    x: 80,
+                    y: 830,
+                    width: 700,
+                    height: 140,
+                    radius: 12,
+                    gradient: 'linear-gradient(135deg, rgba(30, 30, 36, 0.9) 0%, rgba(15, 15, 18, 0.95) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    glow: false
+                },
+                {
+                    id: 'layer-title',
+                    type: 'text',
+                    name: 'Título Principal',
+                    text: 'MAXIM BROADCAST',
+                    x: 120,
+                    y: 855,
+                    fontSize: 40,
+                    color: '#00d2ff',
+                    font: 'Outfit',
+                    glow: true
+                },
+                {
+                    id: 'layer-sub',
+                    type: 'text',
+                    name: 'Subtítulo',
+                    text: 'Estación de Automatización de TV',
+                    x: 120,
+                    y: 915,
+                    fontSize: 22,
+                    color: '#ffffff',
+                    font: 'Inter',
+                    glow: false
+                }
+            ];
+        }
+
+        function setTool(tool) {
+            activeTool = tool;
+            document.querySelectorAll('.sidebar .tool-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Add Text Layer
+        function addTextLayer(defaultText, x, y, size, color, font, glow) {
+            const id = 'layer-' + Date.now();
+            layers.push({
+                id: id,
+                type: 'text',
+                name: 'Texto ' + (layers.filter(l => l.type === 'text').length + 1),
+                text: defaultText,
+                x: x,
+                y: y,
+                fontSize: size,
+                color: color,
+                font: font,
+                glow: glow
+            });
+            selectLayer(id);
+            renderCanvas();
+            renderLayerList();
+        }
+
+        // Add Shape Layer
+        function addShapeLayer() {
+            const id = 'layer-' + Date.now();
+            layers.push({
+                id: id,
+                type: 'shape',
+                name: 'Fondo Personalizado',
+                x: 150,
+                y: 400,
+                width: 600,
+                height: 120,
+                radius: 8,
+                gradient: 'linear-gradient(135deg, rgba(0, 210, 255, 0.8) 0%, rgba(48, 209, 88, 0.8) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                glow: true
+            });
+            selectLayer(id);
+            renderCanvas();
+            renderLayerList();
+        }
+
+        // Clear all layers
+        function clearCanvas() {
+            if (confirm("¿Estás seguro de que quieres vaciar el lienzo?")) {
+                layers = [];
+                selectedLayerId = null;
+                renderCanvas();
+                renderLayerList();
+                hideProperties();
+            }
+        }
+
+        // Render Canvas Layers
+        function renderCanvas() {
+            const canvas = document.getElementById('canvas');
+            canvas.innerHTML = '';
+
+            layers.forEach(layer => {
+                const el = document.createElement('div');
+                el.id = layer.id;
+                el.className = 'canvas-element';
+                el.style.left = layer.x + 'px';
+                el.style.top = layer.y + 'px';
+
+                if (layer.type === 'text') {
+                    el.innerText = layer.text;
+                    el.style.fontSize = layer.fontSize + 'px';
+                    el.style.color = layer.color;
+                    el.style.fontFamily = layer.font;
+                    el.style.fontWeight = (layer.font === 'Outfit') ? '800' : '400';
+                    if (layer.glow) {
+                        el.style.textShadow = `0 0 10px ${layer.color}, 0 0 20px ${layer.color}`;
+                    } else {
+                        el.style.textShadow = 'none';
+                    }
+                } else if (layer.type === 'shape') {
+                    el.style.width = layer.width + 'px';
+                    el.style.height = layer.height + 'px';
+                    el.style.borderRadius = layer.radius + 'px';
+                    el.style.background = layer.gradient;
+                    el.style.border = layer.border;
+                    if (layer.glow) {
+                        el.classList.add('lower-third-bg');
+                    } else {
+                        el.style.backdropFilter = 'none';
+                        el.style.boxShadow = 'none';
+                    }
+                }
+
+                if (selectedLayerId === layer.id && !document.body.classList.contains('obs-live-mode')) {
+                    el.classList.add('selected');
+                }
+
+                // Add drag listeners
+                if (!document.body.classList.contains('obs-live-mode')) {
+                    el.addEventListener('mousedown', (e) => startDrag(e, layer.id));
+                }
+
+                canvas.appendChild(el);
+            });
+        }
+
+        // Render Layers list in right panel
+        function renderLayerList() {
+            const container = document.getElementById('layers-container');
+            container.innerHTML = '';
+
+            // Render list in reverse order (top layer first)
+            [...layers].reverse().forEach(layer => {
+                const item = document.createElement('div');
+                item.className = 'layer-item' + (selectedLayerId === layer.id ? ' active' : '');
+                item.onclick = () => selectLayer(layer.id);
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'layer-name';
+                nameDiv.innerHTML = `⚙ <b>${layer.name}</b>`;
+
+                const actions = document.createElement('div');
+                actions.className = 'layer-actions';
+                
+                // Bring to front
+                const upBtn = document.createElement('button');
+                upBtn.className = 'layer-action-btn';
+                upBtn.innerHTML = '▲';
+                upBtn.title = 'Traer al Frente';
+                upBtn.onclick = (e) => { e.stopPropagation(); moveLayerOrder(layer.id, 1); };
+
+                // Send to back
+                const downBtn = document.createElement('button');
+                downBtn.className = 'layer-action-btn';
+                downBtn.innerHTML = '▼';
+                downBtn.title = 'Enviar al Fondo';
+                downBtn.onclick = (e) => { e.stopPropagation(); moveLayerOrder(layer.id, -1); };
+
+                // Delete
+                const delBtn = document.createElement('button');
+                delBtn.className = 'layer-action-btn';
+                delBtn.innerHTML = '✖';
+                delBtn.title = 'Eliminar Capa';
+                delBtn.onclick = (e) => { e.stopPropagation(); deleteLayer(layer.id); };
+
+                actions.appendChild(upBtn);
+                actions.appendChild(downBtn);
+                actions.appendChild(delBtn);
+
+                item.appendChild(nameDiv);
+                item.appendChild(actions);
+
+                container.appendChild(item);
+            });
+        }
+
+        // Layer ordering
+        function moveLayerOrder(id, dir) {
+            const idx = layers.findIndex(l => l.id === id);
+            if (idx === -1) return;
+
+            const newIdx = idx + dir;
+            if (newIdx >= 0 && newIdx < layers.size) {
+                // swap
+                const temp = layers[idx];
+                layers[idx] = layers[newIdx];
+                layers[newIdx] = temp;
+                renderCanvas();
+                renderLayerList();
+            }
+        }
+
+        function deleteLayer(id) {
+            layers = layers.filter(l => l.id !== id);
+            if (selectedLayerId === id) {
+                selectedLayerId = null;
+                hideProperties();
+            }
+            renderCanvas();
+            renderLayerList();
+        }
+
+        function selectLayer(id) {
+            selectedLayerId = id;
+            document.querySelectorAll('.layer-item').forEach(item => item.classList.remove('active'));
+            renderCanvas();
+            renderLayerList();
+
+            const layer = layers.find(l => l.id === id);
+            if (!layer) return;
+
+            if (layer.type === 'text') {
+                document.getElementById('section-properties').style.display = 'block';
+                document.getElementById('section-shape-properties').style.display = 'none';
+
+                document.getElementById('prop-text').value = layer.text;
+                document.getElementById('prop-color').value = layer.color;
+                document.getElementById('prop-size').value = layer.fontSize;
+                document.getElementById('prop-font').value = layer.font;
+                document.getElementById('prop-glow').checked = layer.glow;
+            } else if (layer.type === 'shape') {
+                document.getElementById('section-properties').style.display = 'none';
+                document.getElementById('section-shape-properties').style.display = 'block';
+
+                document.getElementById('shape-width').value = layer.width;
+                document.getElementById('shape-height').value = layer.height;
+                document.getElementById('shape-radius').value = layer.radius;
+            }
+        }
+
+        function hideProperties() {
+            document.getElementById('section-properties').style.display = 'none';
+            document.getElementById('section-shape-properties').style.display = 'none';
+        }
+
+        // Update active properties on selected text layer
+        function updateSelectedLayer() {
+            if (!selectedLayerId) return;
+            const layer = layers.find(l => l.id === selectedLayerId);
+            if (layer && layer.type === 'text') {
+                layer.text = document.getElementById('prop-text').value;
+                layer.color = document.getElementById('prop-color').value;
+                layer.fontSize = parseInt(document.getElementById('prop-size').value);
+                layer.font = document.getElementById('prop-font').value;
+                layer.glow = document.getElementById('prop-glow').checked;
+                renderCanvas();
+            }
+        }
+
+        // Update active properties on selected shape layer
+        function updateSelectedShape() {
+            if (!selectedLayerId) return;
+            const layer = layers.find(l => l.id === selectedLayerId);
+            if (layer && layer.type === 'shape') {
+                layer.width = parseInt(document.getElementById('shape-width').value);
+                layer.height = parseInt(document.getElementById('shape-height').value);
+                layer.radius = parseInt(document.getElementById('shape-radius').value);
+                renderCanvas();
+            }
+        }
+
+        // Update transitions settings
+        function updateAnimationSettings() {
+            animationSettings.entry = document.getElementById('anim-entry').value;
+            animationSettings.exit = document.getElementById('anim-exit').value;
+        }
+
+        // Dragging Logic
+        function startDrag(e, id) {
+            if (activeTool !== 'select') return;
+            e.preventDefault();
+            selectedLayerId = id;
+            selectLayer(id);
+
+            const layer = layers.find(l => l.id === id);
+            if (!layer) return;
+
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+
+            // Get viewport scale factor
+            const container = document.getElementById('canvas-container');
+            const transform = container.style.transform;
+            const scaleMatch = transform.match(/scale\(([^)]+)\)/);
+            const scale = scaleMatch ? parseFloat(scaleMatch[1]) : 1;
+
+            dragOffsetX = layer.x;
+            dragOffsetY = layer.y;
+
+            const onMouseMove = (ev) => {
+                if (!isDragging) return;
+                const dx = (ev.clientX - startX) / scale;
+                const dy = (ev.clientY - startY) / scale;
+                layer.x = Math.round(dragOffsetX + dx);
+                layer.y = Math.round(dragOffsetY + dy);
+
+                // Update UI on screen
+                const el = document.getElementById(layer.id);
+                if (el) {
+                    el.style.left = layer.x + 'px';
+                    el.style.top = layer.y + 'px';
+                }
+            };
+
+            const onMouseUp = () => {
+                isDragging = false;
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+            };
+
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+        }
+
+        // Simulated AI Style Generator
+        function generateAIStyle() {
+            const prompt = document.getElementById('ai-prompt').value.toLowerCase().trim();
+            if (prompt === '') {
+                alert("Por favor escribe un prompt de diseño antes de generar.");
+                return;
+            }
+
+            // Find main backdrop shape layer
+            let bgLayer = layers.find(l => l.type === 'shape' && l.id === 'layer-bg');
+            if (!bgLayer) {
+                // fallback to first shape
+                bgLayer = layers.find(l => l.type === 'shape');
+            }
+
+            if (!bgLayer) {
+                alert("Añade un fondo (Lower Third Shape) al lienzo para poder aplicar el estilo de la IA.");
+                return;
+            }
+
+            let grad = 'linear-gradient(135deg, rgba(30, 30, 36, 0.9) 0%, rgba(15, 15, 18, 0.95) 100%)';
+            let border = '1px solid rgba(255, 255, 255, 0.1)';
+            let glow = false;
+            let primaryColor = '#00d2ff'; // Default neon blue
+
+            if (prompt.includes('fuego') || prompt.includes('rojo') || prompt.includes('calido')) {
+                grad = 'linear-gradient(135deg, rgba(235, 15, 15, 0.85) 0%, rgba(255, 100, 10, 0.9) 100%)';
+                border = '1px solid rgba(255, 100, 100, 0.3)';
+                glow = true;
+                primaryColor = '#ff453a';
+            } else if (prompt.includes('cyberpunk') || prompt.includes('neon') || prompt.includes('rosa')) {
+                grad = 'linear-gradient(135deg, rgba(255, 0, 128, 0.8) 0%, rgba(0, 210, 255, 0.85) 100%)';
+                border = '1px solid rgba(255, 0, 128, 0.4)';
+                glow = true;
+                primaryColor = '#ff007f';
+            } else if (prompt.includes('tecnologia') || prompt.includes('azul') || prompt.includes('plata')) {
+                grad = 'linear-gradient(135deg, rgba(10, 30, 80, 0.9) 0%, rgba(0, 210, 255, 0.85) 100%)';
+                border = '1px solid rgba(0, 210, 255, 0.4)';
+                glow = true;
+                primaryColor = '#00d2ff';
+            } else if (prompt.includes('elegante') || prompt.includes('dorado') || prompt.includes('corporativo')) {
+                grad = 'linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(197, 160, 89, 0.9) 100%)';
+                border = '1px solid rgba(197, 160, 89, 0.4)';
+                glow = false;
+                primaryColor = '#c5a059';
+            } else if (prompt.includes('bosque') || prompt.includes('verde') || prompt.includes('ecologico')) {
+                grad = 'linear-gradient(135deg, rgba(15, 80, 30, 0.85) 0%, rgba(48, 209, 88, 0.9) 100%)';
+                border = '1px solid rgba(48, 209, 88, 0.3)';
+                glow = true;
+                primaryColor = '#30d158';
+            }
+
+            bgLayer.gradient = grad;
+            bgLayer.border = border;
+            bgLayer.glow = glow;
+
+            // Automatically update title text color to match the theme
+            const titleLayer = layers.find(l => l.id === 'layer-title');
+            if (titleLayer) {
+                titleLayer.color = primaryColor;
+            }
+
+            renderCanvas();
+            // Trigger feedback message
+            alert("¡IA Estilo Generado con éxito! Se aplicaron gradientes vectoriales y sombras de neón basados en tu prompt: \"" + prompt + "\"");
+        }
+
+        // Preview Animation
+        function playPreview() {
+            const container = document.getElementById('canvas-container');
+            const btn = document.getElementById('btn-play-preview');
+            
+            // Remove any existing anim classes
+            container.className = 'canvas-container';
+            void container.offsetWidth; // Trigger reflow
+
+            // Add entry animation class
+            container.classList.add('anim-entry-' + animationSettings.entry);
+            if (btn) btn.innerText = "⏹ Detener Animación";
+
+            // Setup exit trigger after 4 seconds
+            if (window.animTimeout) clearTimeout(window.animTimeout);
+            window.animTimeout = setTimeout(() => {
+                container.className = 'canvas-container';
+                void container.offsetWidth;
+                container.classList.add('anim-exit-' + animationSettings.exit);
+                if (btn) btn.innerText = "▶ Reproducir Entrada";
+            }, 4000);
+        }
+
+        // Export Transparent PNG
+        function exportPNG() {
+            // Because html2canvas is not loaded locally and we are in a sandbox,
+            // we can render our canvas using SVG data URI and canvas drawing natively in JS!
+            // This is 100% clean and requires zero external libraries.
+            const canvasEl = document.getElementById('canvas');
+            
+            // Build an inline SVG representation of layers
+            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080">`;
+            
+            layers.forEach(layer => {
+                if (layer.type === 'text') {
+                    const shadowGlow = layer.glow ? `filter="drop-shadow(0px 0px 8px ${layer.color})"` : '';
+                    svgContent += `
+                        <text x="${layer.x}" y="${layer.y + layer.fontSize * 0.8}" 
+                              fill="${layer.color}" 
+                              font-family="${layer.font}, sans-serif" 
+                              font-size="${layer.fontSize}px" 
+                              font-weight="${layer.font === 'Outfit' ? 'bold' : 'normal'}"
+                              ${shadowGlow}>
+                            ${layer.text}
+                        </text>`;
+                } else if (layer.type === 'shape') {
+                    // Extract colors from linear gradient
+                    // Simple parser for mockup purposes
+                    let fill = '#1e1e24';
+                    if (layer.gradient.includes('rgba')) {
+                        const matches = layer.gradient.match(/rgba\([^)]+\)/g);
+                        if (matches && matches.length > 0) {
+                            fill = matches[0]; // use first color
+                        }
+                    }
+                    svgContent += `
+                        <rect x="${layer.x}" y="${layer.y}" width="${layer.width}" height="${layer.height}" 
+                              rx="${layer.radius}" ry="${layer.radius}" 
+                              fill="${fill}" 
+                              stroke="rgba(255,255,255,0.2)" stroke-width="1" />`;
+                }
+            });
+
+            svgContent += `</svg>`;
+
+            const img = new Image();
+            const svgBlob = new Blob([svgContent], {type: 'image/svg+xml;charset=utf-8'});
+            const url = URL.createObjectURL(svgBlob);
+            
+            img.onload = function() {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = 1920;
+                tempCanvas.height = 1080;
+                const ctx = tempCanvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                // Trigger download
+                const pngUrl = tempCanvas.toDataURL('image/png');
+                const downloadLink = document.createElement('a');
+                downloadLink.href = pngUrl;
+                downloadLink.download = 'maxim_overlay.png';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(url);
+            };
+
+            img.src = url;
+        }
+
+        // Show OBS Link Generator
+        function showObsLink() {
+            const serialized = encodeURIComponent(JSON.stringify({
+                layers: layers,
+                animations: animationSettings
+            }));
+            const currentUrl = window.location.href.split('?')[0];
+            const obsUrl = currentUrl + `?live=1&data=${serialized}`;
+            
+            document.getElementById('obs-url-input').value = obsUrl;
+            document.getElementById('dialog-obs').classList.add('active');
+        }
+
+        function copyObsUrl() {
+            const input = document.getElementById('obs-url-input');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value);
+            alert("¡Enlace copiado con éxito! Pégalo en tu Fuente de Navegador en OBS Studio.");
+            closeDialogs();
+        }
+
+        function closeDialogs() {
+            document.querySelectorAll('.dialog-overlay').forEach(d => d.classList.remove('active'));
+        }
+    </script>
+</body>
+</html>
