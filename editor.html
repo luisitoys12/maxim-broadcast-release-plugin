@@ -3,57 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maxim Editor - Diseñador de Overlays y Lower Thirds</title>
+    <title>Maxim Broadcast - Documentación Oficial y Descargas</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=Orbitron:wght@500;700;900&family=Montserrat:wght@400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #08080a;
-            --panel-bg: rgba(18, 18, 24, 0.75);
+            --panel-bg: rgba(18, 18, 24, 0.85);
             --border-color: rgba(255, 255, 255, 0.08);
-            --border-active: #00d2ff;
             --accent-blue: #00d2ff;
-            --accent-purple: #7928ca;
             --accent-green: #30d158;
+            --accent-orange: #ff9f0a;
             --accent-red: #ff453a;
             --text-color: #f3f4f6;
             --text-muted: #9ca3af;
-            --glow-color: rgba(0, 210, 255, 0.35);
+            --glow-color: rgba(0, 210, 255, 0.25);
         }
 
         * {
             box-sizing: border-box;
-            user-select: none;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.1) transparent;
-        }
-
-        /* Custom Scrollbar */
-        *::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        *::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        *::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-        }
-        *::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.2);
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         /* Ambient Glow Backgrounds */
@@ -61,2769 +44,333 @@
             position: absolute;
             width: 800px;
             height: 800px;
-            background: radial-gradient(circle, rgba(0, 210, 255, 0.08) 0%, rgba(8, 8, 10, 0) 70%);
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.05) 0%, rgba(8, 8, 10, 0) 70%);
             top: -300px;
             right: -200px;
             z-index: -1;
             pointer-events: none;
         }
-        .ambient-radial-2 {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(121, 40, 202, 0.06) 0%, rgba(8, 8, 10, 0) 70%);
-            bottom: -200px;
-            left: -100px;
-            z-index: -1;
-            pointer-events: none;
-        }
 
-        /* OBS Live Mode (Clean overlay output) */
-        body.obs-live-mode {
-            background: transparent !important;
-            overflow: hidden;
-        }
-        body.obs-live-mode .ambient-radial-1,
-        body.obs-live-mode .ambient-radial-2,
-        body.obs-live-mode header,
-        body.obs-live-mode .sidebar,
-        body.obs-live-mode .control-panel,
-        body.obs-live-mode .canvas-controls,
-        body.obs-live-mode #desktop-app-banner {
-            display: none !important;
-        }
-        body.obs-live-mode main {
-            padding: 0 !important;
-            justify-content: center;
-            align-items: center;
-            background: transparent !important;
-        }
-        body.obs-live-mode .canvas-container {
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            transform: none !important;
-        }
-        body.obs-live-mode #canvas {
-            width: 1920px !important;
-            height: 1080px !important;
-            transform-origin: top left;
-            position: absolute;
-            left: 0;
-            top: 0;
-            background: transparent !important;
-        }
-
-        /* Main Header */
+        /* Header */
         header {
-            height: 65px;
-            background-color: rgba(6, 6, 8, 0.85);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            z-index: 10;
-            backdrop-filter: blur(12px);
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .logo {
+        header h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: 22px;
+            font-size: 36px;
             font-weight: 800;
             color: var(--accent-blue);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-shadow: 0 0 10px var(--glow-color);
-        }
-
-        .logo span {
-            color: #ffffff;
-            font-size: 11px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-            padding: 2px 8px;
-            border-radius: 4px;
-            text-shadow: none;
-            box-shadow: 0 0 8px rgba(121, 40, 202, 0.4);
-        }
-
-        .actions-top {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .btn {
-            background-color: rgba(255, 255, 255, 0.04);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            border-color: var(--accent-blue);
-            background-color: rgba(0, 210, 255, 0.06);
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.15);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-blue), #00a4ce);
-            color: #000000;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #4ce2ff, var(--accent-blue));
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
-        }
-
-        .btn-green {
-            background: linear-gradient(135deg, var(--accent-green), #20a040);
-            color: #000000;
-            border: none;
-        }
-
-        .btn-green:hover {
-            background: linear-gradient(135deg, #66ff8b, var(--accent-green));
-            box-shadow: 0 0 15px rgba(48, 209, 88, 0.4);
-        }
-
-        .btn-icon {
-            padding: 8px;
-            border-radius: 8px;
-        }
-
-        /* Workspace Layout */
-        .workspace {
-            flex: 1;
-            display: flex;
-            position: relative;
-        }
-
-        /* Sidebar Toolbar */
-        .sidebar {
-            width: 75px;
-            background-color: rgba(10, 10, 14, 0.8);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 24px 0;
-            gap: 16px;
-            z-index: 5;
-            backdrop-filter: blur(10px);
-        }
-
-        .tool-btn {
-            width: 46px;
-            height: 46px;
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            font-size: 20px;
-            position: relative;
-        }
-
-        .tool-btn:hover, .tool-btn.active {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            background-color: rgba(0, 210, 255, 0.06);
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.15);
-        }
-
-        .tool-btn::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: 85px;
-            background: #121218;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 5px 10px;
-            font-size: 11px;
-            font-weight: 500;
-            border-radius: 6px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-            z-index: 100;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-
-        .tool-btn:hover::after {
-            opacity: 1;
-        }
-
-        /* Center Canvas Area */
-        main {
-            flex: 1;
-            background-color: #060608;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            position: relative;
-            overflow: auto;
-        }
-
-        .canvas-container {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 30px 70px rgba(0,0,0,0.85);
-            background-image: 
-                linear-gradient(45deg, #101014 25%, transparent 25%), 
-                linear-gradient(-45deg, #101014 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #101014 75%), 
-                linear-gradient(-45deg, transparent 75%, #101014 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-            position: relative;
-            transition: transform 0.15s ease-out;
-        }
-
-        .canvas-container.no-grid {
-            background-image: none;
-            background-color: transparent;
-        }
-
-        #canvas {
-            width: 1920px;
-            height: 1080px;
-            position: relative;
-            overflow: hidden;
-            background: transparent;
-        }
-
-        /* Canvas HUD Controls overlay */
-        .canvas-controls {
-            position: absolute;
-            bottom: 24px;
-            left: 24px;
-            background: rgba(18, 18, 24, 0.8);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            backdrop-filter: blur(10px);
-            z-index: 4;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .zoom-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 14px;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .zoom-btn:hover {
-            background: rgba(255,255,255,0.08);
-            color: var(--accent-blue);
-        }
-
-        /* Right Control Panel */
-        .control-panel {
-            width: 350px;
-            background-color: rgba(10, 10, 14, 0.85);
-            border-left: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            z-index: 5;
-            overflow-y: auto;
-            backdrop-filter: blur(16px);
-        }
-
-        .panel-tab-headers {
-            display: flex;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(0,0,0,0.2);
-        }
-        .panel-tab {
-            flex: 1;
-            padding: 14px 0;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            color: var(--text-muted);
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-        }
-        .panel-tab.active {
-            color: var(--accent-blue);
-            border-bottom-color: var(--accent-blue);
-            background: rgba(255,255,255,0.02);
-        }
-
-        .panel-section {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .panel-section.collapsed {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .panel-section h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 13px;
-            font-family: 'Outfit', sans-serif;
-            text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--accent-blue);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-shadow: 0 0 15px var(--glow-color);
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: 600;
+        header p {
             color: var(--text-muted);
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        /* Discontinuation Notice */
+        .warning-banner {
+            background: linear-gradient(135deg, rgba(255, 69, 58, 0.15) 0%, rgba(255, 159, 10, 0.05) 100%);
+            border: 1px solid var(--accent-red);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .warning-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .warning-content h3 {
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .form-control {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px 12px;
-            color: #ffffff;
-            font-family: inherit;
-            font-size: 13px;
-            outline: none;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .form-control:focus {
-            border-color: var(--accent-blue);
-            background-color: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
-        }
-
-        select.form-control {
-            cursor: pointer;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 10px;
-        }
-
-        /* Preset Grids */
-        .preset-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .preset-item {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 11px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .preset-item:hover {
-            border-color: var(--accent-blue);
-            background: rgba(0,210,255,0.05);
-            transform: scale(1.02);
-        }
-
-        /* AI Prompt Box */
-        .ai-prompt-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .ai-textarea {
-            height: 65px;
-            resize: none;
-            font-size: 12px;
-        }
-
-        .ai-btn {
-            background: linear-gradient(135deg, var(--accent-purple), #540ea6);
-            color: #fff;
-            border: none;
-            box-shadow: 0 5px 15px rgba(121, 40, 202, 0.3);
-        }
-        .ai-btn:hover {
-            background: linear-gradient(135deg, #8a3be2, var(--accent-purple));
-            box-shadow: 0 8px 20px rgba(121, 40, 202, 0.5);
-        }
-
-        /* Layer List UI */
-        .layer-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .layer-item {
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .layer-item.active {
-            border-color: var(--accent-blue);
-            background-color: rgba(0, 210, 255, 0.05);
-            box-shadow: inset 0 0 10px rgba(0,210,255,0.05);
-        }
-
-        .layer-name {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-
-        .layer-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .layer-action-btn {
-            background: none;
-            border: none;
+        .warning-content p {
             color: var(--text-muted);
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            font-size: 14px;
         }
 
-        .layer-action-btn:hover {
+        /* Section Layout */
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
             color: #ffffff;
-            background: rgba(255,255,255,0.08);
-        }
-        .layer-action-btn.active {
-            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
         }
 
-        /* Canvas Draggable Elements */
-        .canvas-element {
-            position: absolute;
-            cursor: move;
-            outline: 2px dashed transparent;
-            box-sizing: border-box;
-            transform-origin: center center;
+        .grid-downloads {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
         }
 
-        .canvas-element:hover {
-            outline: 2px dashed rgba(0, 210, 255, 0.4);
+        .download-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s;
         }
 
-        .canvas-element.selected {
-            outline: 2px solid var(--accent-blue);
+        .download-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .card-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .btn-download {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: block;
+        }
+
+        .btn-download:hover {
+            border-color: var(--accent-blue);
+            background-color: rgba(0, 210, 255, 0.08);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.15);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, var(--accent-blue), #009dbf);
+            color: #000;
+            border: none;
+        }
+        .btn-blue:hover {
+            background: linear-gradient(135deg, #4ce2ff, var(--accent-blue));
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
         }
 
-        .canvas-element.locked {
-            cursor: default;
+        .btn-green {
+            background: linear-gradient(135deg, var(--accent-green), #1c8c34);
+            color: #000;
+            border: none;
         }
-        .canvas-element.locked.selected {
-            outline: 2px solid var(--accent-red);
-            box-shadow: 0 0 15px rgba(255, 69, 58, 0.3);
-        }
-
-        /* Custom shapes using Clip Path / Skew */
-        .shape-slanted {
-            transform: skewX(-15deg);
-        }
-        .shape-chevron {
-            clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%);
+        .btn-green:hover {
+            background: linear-gradient(135deg, #46ff73, var(--accent-green));
+            box-shadow: 0 0 15px rgba(48, 209, 88, 0.3);
         }
 
-        /* Two-tone accent shape helper */
-        .shape-twotone::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 8px;
-            background: var(--accent-blue);
-            border-top-left-radius: inherit;
-            border-bottom-left-radius: inherit;
+        .btn-orange {
+            background: linear-gradient(135deg, var(--accent-orange), #b26a00);
+            color: #000;
+            border: none;
+        }
+        .btn-orange:hover {
+            background: linear-gradient(135deg, #ffb340, var(--accent-orange));
+            box-shadow: 0 0 15px rgba(255, 159, 10, 0.3);
         }
 
-        /* Animations Stylesheet */
-        @keyframes slideInLeft {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        /* Documentation Content */
+        .doc-section {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
         }
 
-        @keyframes slideOutLeft {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(-100%); opacity: 0; }
+        .doc-step {
+            margin-bottom: 24px;
         }
 
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .doc-step:last-child {
+            margin-bottom: 0;
         }
 
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes zoomOut {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(0.8); opacity: 0; }
-        }
-
-        /* Applied entry/exit classes */
-        .anim-entry-slideLeft { animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .anim-exit-slideLeft { animation: slideOutLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .anim-entry-slideRight { animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .anim-exit-slideRight { animation: slideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .anim-entry-fade { animation: fadeIn 0.6s ease forwards; }
-        .anim-exit-fade { animation: fadeOut 0.6s ease forwards; }
-        .anim-entry-zoom { animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .anim-exit-zoom { animation: zoomOut 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-        /* Dialog overlays */
-        .dialog-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+        .doc-step h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent-blue);
+            font-size: 15px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            backdrop-filter: blur(8px);
+            gap: 8px;
         }
-        .dialog-overlay.active {
-            opacity: 1; pointer-events: all;
-        }
-        .dialog-box {
-            background: #111116;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 36px;
-            max-width: 550px;
-            width: 90%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
-            text-align: center;
-            transform: scale(0.95);
-            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .dialog-overlay.active .dialog-box {
-            transform: scale(1);
-        }
-        .dialog-box h2 {
-            margin-top: 0;
-            color: var(--accent-blue);
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-        }
-        .dialog-box p {
+
+        .doc-step p {
             color: var(--text-muted);
             font-size: 14px;
-            line-height: 1.6;
+            padding-left: 24px;
         }
-        .copy-box {
-            display: flex;
-            margin: 24px 0;
-            gap: 12px;
-        }
-        .copy-box input {
-            flex: 1;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
+
+        code {
+            background-color: rgba(255,255,255,0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #ffffff;
             font-size: 13px;
-            outline: none;
         }
 
-        /* Image preset list style */
-        .icon-presets-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 8px;
+        ol {
+            padding-left: 20px;
+            margin-top: 10px;
         }
-        .icon-preset-btn {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-color);
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            font-size: 10px;
+
+        li {
+            margin-bottom: 8px;
+            font-size: 14px;
             color: var(--text-muted);
-            transition: all 0.2s;
-        }
-        .icon-preset-btn svg {
-            width: 24px;
-            height: 24px;
-        }
-        .icon-preset-btn:hover {
-            border-color: var(--accent-blue);
-            background: rgba(0,210,255,0.05);
-            color: #fff;
         }
 
-        /* Drawer handle (only on mobile) */
-        .drawer-handle {
-            display: none;
-            height: 44px;
-            background: #0a0a0e;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--accent-blue);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header {
-                height: 55px;
-                padding: 0 16px;
-            }
-            .logo {
-                font-size: 18px;
-            }
-            .actions-top {
-                gap: 8px;
-            }
-            .actions-top .btn {
-                padding: 6px 12px;
-                font-size: 11px;
-            }
-            .workspace {
-                flex-direction: column;
-                height: calc(100vh - 55px);
-                overflow: hidden;
-            }
-            .sidebar {
-                width: 100%;
-                height: 55px;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0 16px;
-                gap: 0;
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-                order: 2;
-            }
-            .tool-btn {
-                width: 38px;
-                height: 38px;
-                font-size: 18px;
-            }
-            .tool-btn::after {
-                display: none;
-            }
-            main {
-                flex: 1;
-                padding: 10px;
-                overflow: hidden;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                order: 1;
-            }
-            .control-panel {
-                position: fixed;
-                bottom: 55px;
-                left: 0;
-                right: 0;
-                width: 100%;
-                height: 350px;
-                background-color: #0c0c10;
-                border-left: none;
-                border-top: 2px solid var(--border-color);
-                transform: translateY(306px);
-                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                z-index: 1000;
-            }
-            .control-panel.open {
-                transform: translateY(0);
-            }
-            .drawer-handle {
-                display: flex;
-            }
-            .panel-section {
-                padding: 12px 16px;
-            }
+        strong {
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
 
     <div class="ambient-radial-1"></div>
-    <div class="ambient-radial-2"></div>
 
-    <!-- App Download Banner -->
-    <div id="desktop-app-banner" style="display: none; background: linear-gradient(90deg, #ff453a, #7928ca, #00d2ff); color: #fff; padding: 10px 20px; font-size: 13px; font-weight: 600; text-align: center; position: relative; z-index: 2000;">
-        ⚠️ Funciones limitadas. Descargar para obtener todo el potencial disponible: 
-        <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximRemote.apk" style="color: #fff; text-decoration: underline; margin-left: 8px; font-weight: 700;">APK Android</a> | 
-        <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximEditor.exe" style="color: #fff; text-decoration: underline; margin-left: 8px; font-weight: 700;">Maxim Editor para PC (.exe)</a>
-        <button onclick="closeAppBanner()" style="background: none; border: none; color: #fff; float: right; font-size: 16px; cursor: pointer; font-weight: bold; padding: 0 5px;">×</button>
-    </div>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>MAXIM BROADCAST</h1>
+            <p>Documentación y Manual del Usuario</p>
+        </header>
 
-    <!-- Header -->
-    <header>
-        <div class="logo">
-            MAXIM EDITOR <span>BETA v2</span>
-        </div>
-        <div class="actions-top">
-            <button class="btn btn-icon" onclick="undo()" title="Deshacer (Ctrl+Z)">↩️</button>
-            <button class="btn btn-icon" onclick="redo()" title="Rehacer (Ctrl+Y)">↪️</button>
-            <button class="btn btn-green" id="btn-play-preview" onclick="playPreview()">
-                ▶ Reproducir Entrada
-            </button>
-            <button class="btn" onclick="exportPNG()">
-                📥 Descargar PNG
-            </button>
-            <button class="btn btn-primary" onclick="showObsLink()">
-                🔗 Copiar Enlace OBS
-            </button>
-        </div>
-    </header>
-
-    <!-- Workspace -->
-    <div class="workspace">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <button class="tool-btn active" data-tooltip="Selección (Puntero)" onclick="setTool('select')">🖱️</button>
-            <button class="tool-btn" data-tooltip="Añadir Texto" onclick="addTextLayer('Texto de Prueba', 120, 850, 40, '#00d2ff', 'Outfit', true)">T+</button>
-            <button class="tool-btn" data-tooltip="Añadir Fondo Zócalo" onclick="addShapeLayer()">⬜</button>
-            <button class="tool-btn" data-tooltip="Añadir Imagen o Logo" onclick="addImageLayer()">🖼️</button>
-            <button class="tool-btn" data-tooltip="Cargar Pre-diseño" onclick="switchTab('design')">🎨</button>
-            <button class="tool-btn" data-tooltip="Generar Flashback IA" onclick="switchTab('flashback')">🎙️</button>
-            <button class="tool-btn" data-tooltip="Limpiar Todo" onclick="clearCanvas()" style="margin-top: auto; border-color: var(--accent-red); color: var(--accent-red);">🗑️</button>
+        <!-- Warning Discontinuation Notice -->
+        <div class="warning-banner">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-content">
+                <h3>Editor en línea Descontinuado</h3>
+                <p>
+                    La versión web interactiva de <strong>editor.html</strong> ha sido descontinuada. Para asegurar el máximo rendimiento de renderizado por hardware, almacenamiento persistente de plantillas sin límites del navegador e integración directa con OBS Studio y la mezcladora de sonido, se han desarrollado las aplicaciones nativas offline e híbridas correspondientes.
+                </p>
+            </div>
         </div>
 
-        <!-- Canvas Viewport -->
-        <main>
-            <div class="canvas-container" id="canvas-container">
-                <div id="canvas">
-                    <!-- Dynamic layers will go here -->
+        <!-- Section: Download Center -->
+        <h2>Centro de Descargas Oficial</h2>
+        <div class="grid-downloads">
+            <!-- APK Android -->
+            <div class="download-card">
+                <div class="card-header">
+                    <h3>APK Android (Móvil)</h3>
+                    <p>App híbrida que combina la mesa de Playout remota con el diseñador de overlays local y offline en tu tableta o teléfono móvil.</p>
                 </div>
+                <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximRemote.apk" class="btn-download btn-blue">Descargar APK</a>
             </div>
 
-            <!-- Canvas controls overlay -->
-            <div class="canvas-controls">
-                <button class="zoom-btn" onclick="zoomCanvas(-0.1)">➖</button>
-                <span id="zoom-text">Zoom: 100%</span>
-                <button class="zoom-btn" onclick="zoomCanvas(0.1)">➕</button>
-                <span style="color:var(--border-color)">|</span>
-                <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:11px;">
-                    <input type="checkbox" id="grid-toggle" checked onchange="toggleGrid()"> Rejilla
-                </label>
-            </div>
-        </main>
-
-        <!-- Right Control Panel -->
-        <div class="control-panel" id="control-panel">
-            <!-- Mobile Handle -->
-            <div class="drawer-handle" onclick="toggleMobileDrawer()">
-                <span id="drawer-toggle-text">🔼 Mostrar Propiedades y Capas</span>
+            <!-- Maxim Editor -->
+            <div class="download-card">
+                <div class="card-header">
+                    <h3>Maxim Editor PC (.exe)</h3>
+                    <p>Aplicación de escritorio nativa para diseñar zócalos, overlays y tercios inferiores de alto rendimiento con aceleración local.</p>
+                </div>
+                <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximEditor.exe" class="btn-download btn-green">Descargar Editor PC</a>
             </div>
 
-            <div class="panel-tab-headers">
-                <div class="panel-tab active" id="tab-props" onclick="switchTab('props')">Ajustes</div>
-                <div class="panel-tab" id="tab-design" onclick="switchTab('design')">Plantillas</div>
-                <div class="panel-tab" id="tab-layers" onclick="switchTab('layers')">Capas</div>
-                <div class="panel-tab" id="tab-flashback" onclick="switchTab('flashback')">Flashback IA</div>
+            <!-- Playout y Plugin -->
+            <div class="download-card">
+                <div class="card-header">
+                    <h3>Suite Playout & OBS</h3>
+                    <p>Instalador inteligente todo-en-uno que configura el plugin nativo en OBS Studio 32+ y añade la estación de Playout en PC.</p>
+                </div>
+                <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximBroadcast-Setup.exe" class="btn-download">Descargar Suite</a>
             </div>
 
-            <!-- Tab content: Properties -->
-            <div id="tab-content-props">
-                <!-- Text Properties Section -->
-                <div class="panel-section" id="section-properties" style="display: none;">
-                    <h3>Propiedades de Texto</h3>
-                    
-                    <div class="form-group">
-                        <label>Contenido del Texto:</label>
-                        <input type="text" class="form-control" id="prop-text" oninput="updateSelectedLayer()">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Color Texto:</label>
-                            <input type="color" class="form-control" id="prop-color" oninput="updateSelectedLayer()" style="padding:2px; height:34px;">
-                        </div>
-                        <div class="form-group">
-                            <label>Tamaño (px):</label>
-                            <input type="number" class="form-control" id="prop-size" oninput="updateSelectedLayer()">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Fuente:</label>
-                            <select class="form-control" id="prop-font" onchange="updateSelectedLayer()">
-                                <option value="Outfit">Outfit (Moderna)</option>
-                                <option value="Inter">Inter (Limpia)</option>
-                                <option value="Orbitron">Orbitron (Gamer/Cyber)</option>
-                                <option value="Montserrat">Montserrat</option>
-                                <option value="Playfair Display">Playfair (Serif)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Grosor:</label>
-                            <select class="form-control" id="prop-weight" onchange="updateSelectedLayer()">
-                                <option value="300">Ligera</option>
-                                <option value="400">Normal</option>
-                                <option value="700">Negrita</option>
-                                <option value="900">Black</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Espacio Letras:</label>
-                            <input type="number" class="form-control" id="prop-letterspacing" step="0.5" oninput="updateSelectedLayer()">
-                        </div>
-                        <div class="form-group">
-                            <label>Alineado:</label>
-                            <select class="form-control" id="prop-align" onchange="updateSelectedLayer()">
-                                <option value="left">Izquierda</option>
-                                <option value="center">Centro</option>
-                                <option value="right">Derecha</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Efecto Brillo:</label>
-                        <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid var(--border-color)">
-                            <label style="display:flex; align-items:center; gap:8px; font-size:13px; text-transform:none; color:#fff; cursor:pointer; margin:0;">
-                                <input type="checkbox" id="prop-glow" onchange="updateSelectedLayer()">
-                                Activar Neón
-                            </label>
-                            <input type="color" id="prop-glow-color" oninput="updateSelectedLayer()" style="width:30px; height:24px; padding:0; border:1px solid var(--border-color); cursor:pointer;">
-                        </div>
-                    </div>
+            <!-- Adobe Extension -->
+            <div class="download-card">
+                <div class="card-header">
+                    <h3>Maxim to OBS (Adobe)</h3>
+                    <p>Extensión CEP de código cerrado con licencia comercial para la integración bidireccional de Premiere, After Effects y Photoshop.</p>
                 </div>
+                <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/maxim-to-obs-adobe.zip" class="btn-download btn-orange">Descargar Plugin (.zip)</a>
+            </div>
+        </div>
 
-                <!-- Shape Properties Section -->
-                <div class="panel-section" id="section-shape-properties" style="display: none;">
-                    <h3>Propiedades de Fondo</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Ancho (px):</label>
-                            <input type="number" class="form-control" id="shape-width" oninput="updateSelectedShape()">
-                        </div>
-                        <div class="form-group">
-                            <label>Alto (px):</label>
-                            <input type="number" class="form-control" id="shape-height" oninput="updateSelectedShape()">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Estilo de Forma:</label>
-                            <select class="form-control" id="shape-style" onchange="updateSelectedShape()">
-                                <option value="rect">Rectángulo Redondeado</option>
-                                <option value="slanted">Borde Inclinado (Cyber)</option>
-                                <option value="twotone">Dos Tonos (Barra Accent)</option>
-                                <option value="chevron">Diseño Chevron</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Esquina (px):</label>
-                            <input type="number" class="form-control" id="shape-radius" oninput="updateSelectedShape()">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tipo de Relleno:</label>
-                        <select class="form-control" id="shape-filltype" onchange="updateSelectedShape()">
-                            <option value="solid">Sólido</option>
-                            <option value="gradient">Gradiente Vectorial</option>
-                        </select>
-                    </div>
-
-                    <div class="form-row" id="group-solid-color">
-                        <div class="form-group">
-                            <label>Color Relleno:</label>
-                            <input type="color" class="form-control" id="shape-color" oninput="updateSelectedShape()" style="padding:2px; height:34px;">
-                        </div>
-                    </div>
-
-                    <div id="group-gradient" style="display:none;">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Color Inicio:</label>
-                                <input type="color" class="form-control" id="shape-gradstart" oninput="updateSelectedShape()" style="padding:2px; height:34px;">
-                            </div>
-                            <div class="form-group">
-                                <label>Color Fin:</label>
-                                <input type="color" class="form-control" id="shape-gradend" oninput="updateSelectedShape()" style="padding:2px; height:34px;">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Ángulo (grados):</label>
-                            <input type="range" min="0" max="360" class="form-control" id="shape-gradangle" oninput="updateSelectedShape()" style="padding:0; height:24px;">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Grosor Borde:</label>
-                            <input type="number" min="0" max="10" class="form-control" id="shape-border-width" oninput="updateSelectedShape()">
-                        </div>
-                        <div class="form-group">
-                            <label>Color Borde:</label>
-                            <input type="color" class="form-control" id="shape-border-color" oninput="updateSelectedShape()" style="padding:2px; height:34px;">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Opacidad (%):</label>
-                            <input type="range" min="0" max="100" class="form-control" id="shape-opacity" oninput="updateSelectedShape()" style="padding:0; height:24px;">
-                        </div>
-                        <div class="form-group">
-                            <label>Desenfoque Fondo (px):</label>
-                            <input type="number" min="0" max="40" class="form-control" id="shape-blur" oninput="updateSelectedShape()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Image Properties Section -->
-                <div class="panel-section" id="section-image-properties" style="display: none;">
-                    <h3>Propiedades de Imagen</h3>
-                    
-                    <div class="form-group">
-                        <label>Subir Archivo Local:</label>
-                        <input type="file" id="image-file-input" onchange="uploadImage()" accept="image/*" class="form-control" style="font-size:11px; padding:6px;">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Enlace URL de Imagen:</label>
-                        <input type="text" id="image-url-input" oninput="updateSelectedImage()" class="form-control" placeholder="http://...">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Ancho (px):</label>
-                            <input type="number" class="form-control" id="image-width" oninput="updateSelectedImage()">
-                        </div>
-                        <div class="form-group">
-                            <label>Alto (px):</label>
-                            <input type="number" class="form-control" id="image-height" oninput="updateSelectedImage()">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Opacidad (%):</label>
-                        <input type="range" min="0" max="100" class="form-control" id="image-opacity" oninput="updateSelectedImage()" style="padding:0; height:24px;">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Iconos Pre-configurados:</label>
-                        <div class="icon-presets-grid">
-                            <button class="icon-preset-btn" onclick="applyPresetIcon('live')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="#ff453a" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="#ff453a"/></svg>
-                                LIVE
-                            </button>
-                            <button class="icon-preset-btn" onclick="applyPresetIcon('youtube')">
-                                <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                                YouTube
-                            </button>
-                            <button class="icon-preset-btn" onclick="applyPresetIcon('twitch')">
-                                <svg viewBox="0 0 24 24" fill="#9146ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
-                                Twitch
-                            </button>
-                            <button class="icon-preset-btn" onclick="applyPresetIcon('rec')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="#ff453a"/></svg>
-                                REC
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- No Selection Helper -->
-                <div class="panel-section" id="section-no-selection" style="text-align:center; padding:40px 20px;">
-                    <p style="color:var(--text-muted); font-size:13px;">Ningún elemento seleccionado.</p>
-                    <p style="color:var(--text-muted); font-size:11px; margin-top:10px;">Haz clic en un objeto del lienzo o en la lista de capas para editar sus propiedades.</p>
-                </div>
-
-                <!-- Animation Settings -->
-                <div class="panel-section">
-                    <h3>Transiciones & Animación</h3>
-                    <div class="form-group">
-                        <label>Animación de Entrada:</label>
-                        <select class="form-control" id="anim-entry" onchange="updateAnimationSettings()">
-                            <option value="slideLeft">Deslizar desde Izquierda</option>
-                            <option value="slideRight">Deslizar desde Derecha</option>
-                            <option value="fade">Desvanecer (Fade)</option>
-                            <option value="zoom">Acercamiento (Zoom)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Animación de Salida:</label>
-                        <select class="form-control" id="anim-exit" onchange="updateAnimationSettings()">
-                            <option value="slideLeft">Deslizar hacia Izquierda</option>
-                            <option value="slideRight">Deslizar hacia Derecha</option>
-                            <option value="fade">Desvanecer (Fade)</option>
-                            <option value="zoom">Alejamiento (Zoom)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- AI Generator Section -->
-                <div class="panel-section">
-                    <h3>IA Generador de Estilos</h3>
-                    <div class="ai-prompt-container">
-                        <label>Prompt para Generar Estilo:</label>
-                        <textarea class="form-control ai-textarea" id="ai-prompt" placeholder="Ej: neon cyberpunk, fuego rojo, tecnologia azul y plata, oro elegante corporativo..."></textarea>
-                        <button class="btn btn-primary ai-btn" onclick="generateAIStyle()" style="width:100%; justify-content:center; gap:8px;">
-                            ✨ Generar Estilo con IA
-                        </button>
-                    </div>
-                </div>
+        <!-- Section: Integration Guide -->
+        <h2>Manual de Integración Bidireccional: Maxim to OBS</h2>
+        <div class="doc-section">
+            <div class="doc-step">
+                <h4>1. Instalación de la Extensión de Adobe</h4>
+                <p>
+                    Descomprime el archivo <code>maxim-to-obs-adobe.zip</code> y copia la carpeta <code>maxim-to-obs-adobe</code> dentro del directorio de extensiones comunes de tu sistema:
+                </p>
+                <ol>
+                    <li>En Windows: <code>C:\Program Files (x86)\Common Files\Adobe\CEP\extensions\com.maxim.to.obs</code></li>
+                    <li><em>Nota: Si la carpeta <code>CEP\extensions</code> no existe, puedes crearla de forma manual.</em></li>
+                </ol>
             </div>
 
-            <!-- Tab content: Templates/Designs -->
-            <div id="tab-content-design" style="display:none;">
-                <div class="panel-section">
-                    <h3>Plantillas Pre-diseñadas</h3>
-                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:15px;">Carga un estilo instantáneo para tu zócalo. Esto reemplazará tu diseño actual.</p>
-                    
-                    <div class="preset-grid">
-                        <div class="preset-item" onclick="loadTemplate('cyberpunk')">
-                            <span style="font-size:24px; display:block; margin-bottom:4px;">👾</span>
-                            Cyberpunk Neon
-                        </div>
-                        <div class="preset-item" onclick="loadTemplate('corporate')">
-                            <span style="font-size:24px; display:block; margin-bottom:4px;">💼</span>
-                            Elegancia Oro
-                        </div>
-                        <div class="preset-item" onclick="loadTemplate('esports')">
-                            <span style="font-size:24px; display:block; margin-bottom:4px;">🔥</span>
-                            Esports Flame
-                        </div>
-                        <div class="preset-item" onclick="loadTemplate('news')">
-                            <span style="font-size:24px; display:block; margin-bottom:4px;">📺</span>
-                            Breaking News
-                        </div>
-                    </div>
-                </div>
+            <div class="doc-step">
+                <h4>2. Configuración de OBS Studio</h4>
+                <p>
+                    Asegúrate de habilitar el servidor WebSocket de OBS Studio desde el menú de herramientas:
+                </p>
+                <ol>
+                    <li>Abre OBS Studio.</li>
+                    <li>Ve a <strong>Herramientas</strong> -> <strong>Ajustes del servidor WebSocket</strong>.</li>
+                    <li>Habilita el servidor y define el puerto (por defecto: <code>4455</code>).</li>
+                </ol>
             </div>
 
-            <!-- Tab content: Layers -->
-            <div id="tab-content-layers" style="display:none; flex: 1;">
-                <div class="panel-section" style="border-bottom:none; height:100%;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h3>Capas del Proyecto</h3>
-                        <button class="btn btn-icon" onclick="duplicateSelectedLayer()" title="Duplicar Capa Seleccionada" style="padding:4px 8px; font-size:11px;">📄 Duplicar</button>
-                    </div>
-                    <div class="layer-list" id="layers-container">
-                        <!-- Layers item list dynamic -->
-                    </div>
-                </div>
+            <div class="doc-step">
+                <h4>3. Conexión y Activación</h4>
+                <p>
+                    Abre la aplicación de Adobe correspondiente (Premiere Pro, After Effects o Photoshop):
+                </p>
+                <ol>
+                    <li>Ve al menú superior <strong>Ventana</strong> -> <strong>Extensiones</strong> -> <strong>Maxim to OBS</strong>.</li>
+                    <li>Introduce tu clave de licencia comercial en formato <code>MAXIM-XXXX-XXXX-XXXX</code> para activar y desbloquear las herramientas.</li>
+                    <li>Ingresa la dirección IP y puerto del WebSocket de OBS y haz clic en <strong>Conectar</strong>.</li>
+                </ol>
             </div>
 
-            <!-- Tab content: Flashback IA -->
-            <div id="tab-content-flashback" style="display:none; flex: 1; flex-direction: column;">
-                <div class="panel-section">
-                    <h3>Maxim Flashback IA</h3>
-                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:15px;">Genera resúmenes de noticias y boletines interactivos utilizando voces de Microsoft TTS gratis y otros motores locales.</p>
-                    
-                    <div class="form-group">
-                        <label>Voz del Locutor:</label>
-                        <select class="form-control" id="flashback-voice">
-                            <option value="es-ES-AlvaroNeural">Microsoft Álvaro (Español)</option>
-                            <option value="es-ES-ElviraNeural">Microsoft Elvira (Español)</option>
-                            <option value="es-MX-JorgeNeural">Microsoft Jorge (Español México)</option>
-                            <option value="es-MX-DaliaNeural">Microsoft Dalia (Español México)</option>
-                            <option value="en-US-AriaNeural">Microsoft Aria (Inglés)</option>
-                            <option value="en-US-GuyNeural">Microsoft Guy (Inglés)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Titulares de la Noticia:</label>
-                        <textarea class="form-control" id="flashback-text" style="height:90px; resize:none;" placeholder="Escribe el boletín. Ej: ¡Atención! Maxim Broadcast lanza soporte integrado para StreamFX Beta 750..."></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Fondo Musical:</label>
-                            <select class="form-control" id="flashback-bgm">
-                                <option value="news_jingle">Informativo (TV Static)</option>
-                                <option value="cyberpunk_beat">Cyberpunk Beat (RadioSync)</option>
-                                <option value="ambient_pads">Ambiental (Suave)</option>
-                                <option value="none">Sin Música</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Volumen:</label>
-                            <input type="range" min="0" max="100" value="15" class="form-control" id="flashback-bgm-volume" style="padding:0; height:24px;">
-                        </div>
-                    </div>
-
-                    <div style="display:flex; gap:10px; margin-bottom: 15px;">
-                        <button class="btn btn-primary" onclick="generateFlashbackAudio()" style="flex:1; justify-content:center; font-size:12px; padding:8px;">
-                            🎙️ Generar Voz IA
-                        </button>
-                        <button class="btn btn-green" onclick="playFlashbackAudio()" id="btn-play-flashback" style="flex:1; justify-content:center; font-size:12px; padding:8px;">
-                            ▶ Vista Previa
-                        </button>
-                    </div>
-
-                    <div style="padding:12px; background:rgba(0, 210, 255, 0.04); border:1px solid rgba(0, 210, 255, 0.15); border-radius:8px;">
-                        <h4 style="font-size:11px; font-weight:600; color:var(--accent-blue); margin-bottom:5px; text-transform:uppercase;">
-                            🔗 Enlace OBS para Flashback
-                        </h4>
-                        <input type="text" class="form-control" id="flashback-obs-url" style="font-size:10px; padding:6px; background:rgba(0,0,0,0.3); color:#fff;" value="http://localhost:4000/api/flashback/stream?voice=es-ES-AlvaroNeural" readonly>
-                        <button class="btn" onclick="copyFlashbackObsUrl()" style="width:100%; margin-top:8px; font-size:11px; padding:5px; justify-content:center;">
-                            📋 Copiar Enlace
-                        </button>
-                    </div>
-                </div>
+            <div class="doc-step">
+                <h4>4. Operación Bidireccional</h4>
+                <p>
+                    Una vez conectado, puedes interactuar bidireccionalmente con tu transmisión en OBS:
+                </p>
+                <ol>
+                    <li><strong>Enviar Fotograma</strong>: Exporta instantáneamente el lienzo actual de Photoshop o tu composición activa y actualiza automáticamente la fuente <code>MaximFrameSource</code> en OBS.</li>
+                    <li><strong>Marcadores Dinámicos (Timeline Sync)</strong>: Al habilitar esta sincronización, los cambios de escena en OBS Studio inyectarán marcadores automáticamente en la línea de tiempo activa de Adobe Premiere o After Effects.</li>
+                    <li><strong>Control de Reproducción</strong>: Permite a OBS Studio disparar triggers de reproducción y pausa de la secuencia activa de Premiere de forma automática.</li>
+                </ol>
             </div>
-
         </div>
     </div>
 
-    <!-- Copy Link Dialog -->
-    <div class="dialog-overlay" id="dialog-obs">
-        <div class="dialog-box">
-            <h2>Enlace para OBS Studio</h2>
-            <p>Agrega este enlace como una <b>Fuente de Navegador (Browser Source)</b> en tu escena de OBS Studio con ancho <b>1920</b> y alto <b>1080</b>.</p>
-            <div class="copy-box">
-                <input type="text" id="obs-url-input" readonly>
-                <button class="btn btn-primary" onclick="copyObsUrl()">Copiar</button>
-            </div>
-            <button class="btn" style="margin:auto;" onclick="closeDialogs()">Cerrar</button>
-        </div>
-    </div>
-
-    <script>
-        let layers = [];
-        let selectedLayerId = null;
-        let activeTool = 'select';
-        let isDragging = false;
-        let startX = 0, startY = 0;
-        let dragOffsetX = 0, dragOffsetY = 0;
-        let canvasZoom = 1.0;
-
-        // Undo & Redo History stacks
-        let undoStack = [];
-        let redoStack = [];
-
-        let animationSettings = {
-            entry: 'slideLeft',
-            exit: 'slideLeft',
-            duration: 0.8
-        };
-
-        // Save State for Undo history
-        function saveState() {
-            // Cap history to 30 steps
-            if (undoStack.length > 30) {
-                undoStack.shift();
-            }
-            undoStack.push(JSON.stringify(layers));
-            // Clear redo on new actions
-            redoStack = [];
-            // Autosave to localStorage
-            saveToLocalStorage();
-        }
-
-        function undo() {
-            if (undoStack.length === 0) return;
-            redoStack.push(JSON.stringify(layers));
-            const state = undoStack.pop();
-            layers = JSON.parse(state);
-            renderCanvas();
-            renderLayerList();
-            updatePropertiesPanel();
-            saveToLocalStorage();
-        }
-
-        function redo() {
-            if (redoStack.length === 0) return;
-            undoStack.push(JSON.stringify(layers));
-            const state = redoStack.pop();
-            layers = JSON.parse(state);
-            renderCanvas();
-            renderLayerList();
-            updatePropertiesPanel();
-            saveToLocalStorage();
-        }
-
-        // Save project state to localStorage
-        function saveToLocalStorage() {
-            localStorage.setItem('maxim_editor_project', JSON.stringify({
-                layers: layers,
-                animations: animationSettings
-            }));
-        }
-
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('maxim_editor_project');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    layers = parsed.layers;
-                    animationSettings = parsed.animations || animationSettings;
-                    // Update animation selectors
-                    document.getElementById('anim-entry').value = animationSettings.entry;
-                    document.getElementById('anim-exit').value = animationSettings.exit;
-                    return true;
-                } catch(e) {
-                    console.error("Failed to load project from localStorage", e);
-                }
-            }
-            return false;
-        }
-
-        // Zoom Canvas
-        function zoomCanvas(factor) {
-            canvasZoom = Math.max(0.2, Math.min(2.0, canvasZoom + factor));
-            applyCanvasTransform();
-        }
-
-        function applyCanvasTransform() {
-            const container = document.getElementById('canvas-container');
-            container.style.transform = `scale(${canvasZoom})`;
-            document.getElementById('zoom-text').innerText = `Zoom: ${Math.round(canvasZoom * 100)}%`;
-        }
-
-        // Toggle Grid Background
-        function toggleGrid() {
-            const container = document.getElementById('canvas-container');
-            const showGrid = document.getElementById('grid-toggle').checked;
-            if (showGrid) {
-                container.classList.remove('no-grid');
-            } else {
-                container.classList.add('no-grid');
-            }
-        }
-
-        // Scale Canvas dynamically for responsive viewport
-        function scaleCanvas() {
-            const main = document.querySelector('main');
-            const targetW = 1920;
-            const targetH = 1080;
-            
-            // Check if live mode
-            if (document.body.classList.contains('obs-live-mode')) {
-                const scaleX = window.innerWidth / targetW;
-                const scaleY = window.innerHeight / targetH;
-                const scale = Math.min(scaleX, scaleY);
-                document.getElementById('canvas').style.transform = `scale(${scale})`;
-                return;
-            }
-
-            const padding = 60;
-            const availableW = main.clientWidth - padding;
-            const availableH = main.clientHeight - padding;
-
-            const scaleX = availableW / targetW;
-            const scaleY = availableH / targetH;
-            canvasZoom = Math.min(scaleX, scaleY);
-            
-            const container = document.getElementById('canvas-container');
-            container.style.width = `${targetW}px`;
-            container.style.height = `${targetH}px`;
-            applyCanvasTransform();
-        }
-
-        window.addEventListener('resize', scaleCanvas);
-
-        // Initialize App
-        window.addEventListener('load', () => {
-            checkBanner();
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('live') || urlParams.has('obs')) {
-                document.body.classList.add('obs-live-mode');
-                // Load URL settings if any
-                const dataParam = urlParams.get('data');
-                if (dataParam) {
-                    try {
-                        const parsed = JSON.parse(decodeURIComponent(dataParam));
-                        layers = parsed.layers;
-                        animationSettings = parsed.animations;
-                    } catch(e) {
-                        loadDefaults();
-                    }
-                } else {
-                    loadDefaults();
-                }
-                renderCanvas();
-                // Play intro automatically in OBS
-                setTimeout(playPreview, 500);
-            } else {
-                if (!loadFromLocalStorage()) {
-                    loadDefaults();
-                }
-                renderCanvas();
-                renderLayerList();
-                scaleCanvas();
-                updatePropertiesPanel();
-            }
-            scaleCanvas();
-        });
-
-        function loadDefaults() {
-            layers = [
-                {
-                    id: 'layer-bg',
-                    type: 'shape',
-                    name: 'Fondo Zócalo',
-                    x: 80,
-                    y: 830,
-                    width: 750,
-                    height: 140,
-                    radius: 12,
-                    shapeStyle: 'twotone',
-                    fillType: 'gradient',
-                    color: '#1e1e24',
-                    gradStart: 'rgba(18, 18, 24, 0.9)',
-                    gradEnd: 'rgba(8, 8, 10, 0.95)',
-                    gradAngle: 135,
-                    borderWidth: 1,
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                    opacity: 100,
-                    backdropBlur: 15,
-                    glow: true,
-                    visible: true,
-                    locked: false
-                },
-                {
-                    id: 'layer-title',
-                    type: 'text',
-                    name: 'Título Principal',
-                    text: 'MAXIM BROADCAST',
-                    x: 120,
-                    y: 855,
-                    fontSize: 40,
-                    color: '#00d2ff',
-                    font: 'Outfit',
-                    fontWeight: '800',
-                    letterSpacing: 1,
-                    align: 'left',
-                    glow: true,
-                    glowColor: '#00d2ff',
-                    visible: true,
-                    locked: false
-                },
-                {
-                    id: 'layer-sub',
-                    type: 'text',
-                    name: 'Subtítulo',
-                    text: 'Estación de Automatización de TV',
-                    x: 120,
-                    y: 915,
-                    fontSize: 22,
-                    color: '#ffffff',
-                    font: 'Inter',
-                    fontWeight: '400',
-                    letterSpacing: 0,
-                    align: 'left',
-                    glow: false,
-                    glowColor: '#ffffff',
-                    visible: true,
-                    locked: false
-                }
-            ];
-        }
-
-        // Switch panel tabs
-        function switchTab(tabId) {
-            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
-            const tabEl = document.getElementById('tab-' + tabId);
-            if (tabEl) tabEl.classList.add('active');
-
-            document.getElementById('tab-content-props').style.display = (tabId === 'props') ? 'block' : 'none';
-            document.getElementById('tab-content-design').style.display = (tabId === 'design') ? 'block' : 'none';
-            document.getElementById('tab-content-layers').style.display = (tabId === 'layers') ? 'flex' : 'none';
-            document.getElementById('tab-content-flashback').style.display = (tabId === 'flashback') ? 'flex' : 'none';
-        }
-
-        function setTool(tool) {
-            activeTool = tool;
-            document.querySelectorAll('.sidebar .tool-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-
-        // Add Text Layer
-        function addTextLayer(defaultText, x, y, size, color, font, glow) {
-            saveState();
-            const id = 'layer-' + Date.now();
-            layers.push({
-                id: id,
-                type: 'text',
-                name: 'Texto ' + (layers.filter(l => l.type === 'text').length + 1),
-                text: defaultText,
-                x: x,
-                y: y,
-                fontSize: size,
-                color: color,
-                font: font,
-                fontWeight: '700',
-                letterSpacing: 0,
-                align: 'left',
-                glow: glow,
-                glowColor: color,
-                visible: true,
-                locked: false
-            });
-            selectLayer(id);
-            renderCanvas();
-            renderLayerList();
-            switchTab('props');
-        }
-
-        // Add Shape Layer
-        function addShapeLayer() {
-            saveState();
-            const id = 'layer-' + Date.now();
-            layers.push({
-                id: id,
-                type: 'shape',
-                name: 'Caja Fondo ' + (layers.filter(l => l.type === 'shape').length + 1),
-                x: 100,
-                y: 400,
-                width: 600,
-                height: 120,
-                radius: 8,
-                shapeStyle: 'rect',
-                fillType: 'gradient',
-                color: '#1e1e24',
-                gradStart: 'rgba(0, 210, 255, 0.8)',
-                gradEnd: 'rgba(121, 40, 202, 0.8)',
-                gradAngle: 135,
-                borderWidth: 1,
-                borderColor: 'rgba(255,255,255,0.2)',
-                opacity: 100,
-                backdropBlur: 0,
-                glow: true,
-                visible: true,
-                locked: false
-            });
-            selectLayer(id);
-            renderCanvas();
-            renderLayerList();
-            switchTab('props');
-        }
-
-        // Add Image Layer
-        function addImageLayer() {
-            saveState();
-            const id = 'layer-' + Date.now();
-            layers.push({
-                id: id,
-                type: 'image',
-                name: 'Imagen ' + (layers.filter(l => l.type === 'image').length + 1),
-                x: 100,
-                y: 100,
-                width: 120,
-                height: 120,
-                src: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2300d2ff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
-                iconPreset: 'none',
-                opacity: 100,
-                visible: true,
-                locked: false
-            });
-            selectLayer(id);
-            renderCanvas();
-            renderLayerList();
-            switchTab('props');
-        }
-
-        // Clear all layers
-        function clearCanvas() {
-            if (confirm("¿Estás seguro de que quieres vaciar el lienzo?")) {
-                saveState();
-                layers = [];
-                selectedLayerId = null;
-                renderCanvas();
-                renderLayerList();
-                updatePropertiesPanel();
-            }
-        }
-
-        // Render Canvas Layers
-        function renderCanvas() {
-            const canvas = document.getElementById('canvas');
-            canvas.innerHTML = '';
-
-            layers.forEach(layer => {
-                if (!layer.visible) return;
-
-                const el = document.createElement('div');
-                el.id = layer.id;
-                el.className = 'canvas-element';
-                el.style.left = layer.x + 'px';
-                el.style.top = layer.y + 'px';
-                el.style.zIndex = layers.indexOf(layer) + 1;
-
-                if (layer.locked) {
-                    el.classList.add('locked');
-                }
-
-                if (layer.type === 'text') {
-                    el.innerText = layer.text;
-                    el.style.fontSize = layer.fontSize + 'px';
-                    el.style.color = layer.color;
-                    el.style.fontFamily = layer.font + ', sans-serif';
-                    el.style.fontWeight = layer.fontWeight || '400';
-                    el.style.letterSpacing = (layer.letterSpacing || 0) + 'px';
-                    el.style.textAlign = layer.align || 'left';
-                    if (layer.glow) {
-                        const gc = layer.glowColor || layer.color;
-                        el.style.textShadow = `0 0 8px ${gc}, 0 0 16px ${gc}`;
-                    } else {
-                        el.style.textShadow = 'none';
-                    }
-                } else if (layer.type === 'shape') {
-                    el.style.width = layer.width + 'px';
-                    el.style.height = layer.height + 'px';
-                    el.style.borderRadius = layer.radius + 'px';
-                    
-                    // Apply fill type
-                    if (layer.fillType === 'solid') {
-                        el.style.background = layer.color;
-                    } else {
-                        // Linear gradient construction
-                        el.style.background = `linear-gradient(${layer.gradAngle || 135}deg, ${layer.gradStart || '#121218'} 0%, ${layer.gradEnd || '#000'} 100%)`;
-                    }
-
-                    // Apply border styles
-                    if (layer.borderWidth && layer.borderWidth > 0) {
-                        el.style.border = `${layer.borderWidth}px solid ${layer.borderColor || 'rgba(255,255,255,0.1)'}`;
-                    } else {
-                        el.style.border = 'none';
-                    }
-
-                    el.style.opacity = (layer.opacity ?? 100) / 100;
-
-                    // Backdrop filter blur
-                    if (layer.backdropBlur && layer.backdropBlur > 0) {
-                        el.style.backdropFilter = `blur(${layer.backdropBlur}px)`;
-                        el.style.webkitBackdropFilter = `blur(${layer.backdropBlur}px)`;
-                    } else {
-                        el.style.backdropFilter = 'none';
-                        el.style.webkitBackdropFilter = 'none';
-                    }
-
-                    // Shape style classes
-                    el.classList.remove('shape-slanted', 'shape-chevron', 'shape-twotone');
-                    if (layer.shapeStyle === 'slanted') {
-                        el.classList.add('shape-slanted');
-                    } else if (layer.shapeStyle === 'chevron') {
-                        el.classList.add('shape-chevron');
-                    } else if (layer.shapeStyle === 'twotone') {
-                        el.classList.add('shape-twotone');
-                    }
-
-                    if (layer.glow) {
-                        el.style.boxShadow = '0 10px 30px rgba(0,0,0,0.6)';
-                    } else {
-                        el.style.boxShadow = 'none';
-                    }
-                } else if (layer.type === 'image') {
-                    el.style.width = layer.width + 'px';
-                    el.style.height = layer.height + 'px';
-                    el.style.opacity = (layer.opacity ?? 100) / 100;
-                    
-                    const imgEl = document.createElement('img');
-                    imgEl.src = layer.src;
-                    imgEl.style.width = '100%';
-                    imgEl.style.height = '100%';
-                    imgEl.style.display = 'block';
-                    imgEl.style.pointerEvents = 'none'; // prevent image drag overlay
-                    
-                    el.appendChild(imgEl);
-                }
-
-                if (selectedLayerId === layer.id && !document.body.classList.contains('obs-live-mode')) {
-                    el.classList.add('selected');
-                }
-
-                // Add drag/touch listeners
-                if (!document.body.classList.contains('obs-live-mode') && !layer.locked) {
-                    el.addEventListener('mousedown', (e) => startDrag(e, layer.id));
-                    el.addEventListener('touchstart', (e) => startDrag(e, layer.id), { passive: false });
-                } else if (layer.locked) {
-                    // Locked layer selection on click
-                    el.addEventListener('mousedown', (e) => {
-                        selectedLayerId = layer.id;
-                        selectLayer(layer.id);
-                    });
-                }
-
-                canvas.appendChild(el);
-            });
-        }
-
-        // Render Layers tab list
-        function renderLayerList() {
-            const container = document.getElementById('layers-container');
-            container.innerHTML = '';
-
-            [...layers].reverse().forEach(layer => {
-                const item = document.createElement('div');
-                item.className = 'layer-item' + (selectedLayerId === layer.id ? ' active' : '');
-                item.onclick = () => selectLayer(layer.id);
-
-                const nameDiv = document.createElement('div');
-                nameDiv.className = 'layer-name';
-                
-                let icon = '⚙️';
-                if (layer.type === 'text') icon = '🔤';
-                else if (layer.type === 'shape') icon = '⬜';
-                else if (layer.type === 'image') icon = '🖼️';
-
-                nameDiv.innerHTML = `<span style="margin-right:8px">${icon}</span><span id="layer-name-text-${layer.id}">${layer.name}</span>`;
-
-                const actions = document.createElement('div');
-                actions.className = 'layer-actions';
-                
-                // Visibility Eye Button
-                const visBtn = document.createElement('button');
-                visBtn.className = 'layer-action-btn' + (layer.visible ? ' active' : '');
-                visBtn.innerHTML = layer.visible ? '👁️' : '👁️‍🗨️';
-                visBtn.title = 'Mostrar / Ocultar Capa';
-                visBtn.onclick = (e) => { e.stopPropagation(); toggleLayerVisibility(layer.id); };
-
-                // Lock Padlock Button
-                const lockBtn = document.createElement('button');
-                lockBtn.className = 'layer-action-btn' + (layer.locked ? ' active' : '');
-                lockBtn.innerHTML = layer.locked ? '🔒' : '🔓';
-                lockBtn.title = 'Bloquear / Desbloquear Capa';
-                lockBtn.onclick = (e) => { e.stopPropagation(); toggleLayerLock(layer.id); };
-
-                // Rename Button
-                const renameBtn = document.createElement('button');
-                renameBtn.className = 'layer-action-btn';
-                renameBtn.innerHTML = '✏️';
-                renameBtn.title = 'Renombrar Capa';
-                renameBtn.onclick = (e) => { e.stopPropagation(); renameLayerPrompt(layer.id); };
-
-                // Bring to front
-                const upBtn = document.createElement('button');
-                upBtn.className = 'layer-action-btn';
-                upBtn.innerHTML = '▲';
-                upBtn.title = 'Traer al Frente';
-                upBtn.onclick = (e) => { e.stopPropagation(); moveLayerOrder(layer.id, 1); };
-
-                // Send to back
-                const downBtn = document.createElement('button');
-                downBtn.className = 'layer-action-btn';
-                downBtn.innerHTML = '▼';
-                downBtn.title = 'Enviar al Fondo';
-                downBtn.onclick = (e) => { e.stopPropagation(); moveLayerOrder(layer.id, -1); };
-
-                // Delete
-                const delBtn = document.createElement('button');
-                delBtn.className = 'layer-action-btn';
-                delBtn.innerHTML = '✖';
-                delBtn.title = 'Eliminar Capa';
-                delBtn.onclick = (e) => { e.stopPropagation(); deleteLayer(layer.id); };
-
-                actions.appendChild(visBtn);
-                actions.appendChild(lockBtn);
-                actions.appendChild(renameBtn);
-                actions.appendChild(upBtn);
-                actions.appendChild(downBtn);
-                actions.appendChild(delBtn);
-
-                item.appendChild(nameDiv);
-                item.appendChild(actions);
-
-                container.appendChild(item);
-            });
-        }
-
-        // Layer Action implementations
-        function toggleLayerVisibility(id) {
-            saveState();
-            const layer = layers.find(l => l.id === id);
-            if (layer) {
-                layer.visible = !layer.visible;
-                renderCanvas();
-                renderLayerList();
-            }
-        }
-
-        function toggleLayerLock(id) {
-            saveState();
-            const layer = layers.find(l => l.id === id);
-            if (layer) {
-                layer.locked = !layer.locked;
-                renderCanvas();
-                renderLayerList();
-            }
-        }
-
-        function renameLayerPrompt(id) {
-            const layer = layers.find(l => l.id === id);
-            if (layer) {
-                const newName = prompt("Introduce el nuevo nombre para la capa:", layer.name);
-                if (newName && newName.trim() !== '') {
-                    saveState();
-                    layer.name = newName.trim();
-                    renderLayerList();
-                }
-            }
-        }
-
-        function duplicateSelectedLayer() {
-            if (!selectedLayerId) return;
-            const layer = layers.find(l => l.id === selectedLayerId);
-            if (!layer) return;
-
-            saveState();
-            const copy = JSON.parse(JSON.stringify(layer));
-            copy.id = 'layer-' + Date.now();
-            copy.name = copy.name + ' (Copia)';
-            copy.x += 30; // offset position
-            copy.y += 30;
-            copy.locked = false;
-
-            layers.push(copy);
-            selectedLayerId = copy.id;
-            renderCanvas();
-            renderLayerList();
-            updatePropertiesPanel();
-            switchTab('props');
-        }
-
-        // Layer ordering
-        function moveLayerOrder(id, dir) {
-            const idx = layers.findIndex(l => l.id === id);
-            if (idx === -1) return;
-
-            const newIdx = idx + dir;
-            if (newIdx >= 0 && newIdx < layers.length) {
-                saveState();
-                const temp = layers[idx];
-                layers[idx] = layers[newIdx];
-                layers[newIdx] = temp;
-                renderCanvas();
-                renderLayerList();
-            }
-        }
-
-        function deleteLayer(id) {
-            saveState();
-            layers = layers.filter(l => l.id !== id);
-            if (selectedLayerId === id) {
-                selectedLayerId = null;
-            }
-            renderCanvas();
-            renderLayerList();
-            updatePropertiesPanel();
-        }
-
-        function selectLayer(id) {
-            selectedLayerId = id;
-            document.querySelectorAll('.layer-item').forEach(item => item.classList.remove('active'));
-            renderCanvas();
-            renderLayerList();
-            updatePropertiesPanel();
-
-            // Auto-open drawer on mobile
-            if (window.innerWidth <= 768) {
-                const drawer = document.getElementById('control-panel');
-                if (drawer && !drawer.classList.contains('open')) {
-                    drawer.classList.add('open');
-                    document.getElementById('drawer-toggle-text').innerText = '🔽 Ocultar Panel';
-                }
-            }
-        }
-
-        // Update properties panel input values based on active selection
-        function updatePropertiesPanel() {
-            const layer = layers.find(l => l.id === selectedLayerId);
-            
-            if (!layer) {
-                document.getElementById('section-properties').style.display = 'none';
-                document.getElementById('section-shape-properties').style.display = 'none';
-                document.getElementById('section-image-properties').style.display = 'none';
-                document.getElementById('section-no-selection').style.display = 'block';
-                return;
-            }
-
-            document.getElementById('section-no-selection').style.display = 'none';
-
-            if (layer.type === 'text') {
-                document.getElementById('section-properties').style.display = 'block';
-                document.getElementById('section-shape-properties').style.display = 'none';
-                document.getElementById('section-image-properties').style.display = 'none';
-
-                document.getElementById('prop-text').value = layer.text;
-                document.getElementById('prop-color').value = layer.color;
-                document.getElementById('prop-size').value = layer.fontSize;
-                document.getElementById('prop-font').value = layer.font;
-                document.getElementById('prop-weight').value = layer.fontWeight || '400';
-                document.getElementById('prop-letterspacing').value = layer.letterSpacing || 0;
-                document.getElementById('prop-align').value = layer.align || 'left';
-                document.getElementById('prop-glow').checked = layer.glow;
-                document.getElementById('prop-glow-color').value = layer.glowColor || layer.color;
-            } else if (layer.type === 'shape') {
-                document.getElementById('section-properties').style.display = 'none';
-                document.getElementById('section-shape-properties').style.display = 'block';
-                document.getElementById('section-image-properties').style.display = 'none';
-
-                document.getElementById('shape-width').value = layer.width;
-                document.getElementById('shape-height').value = layer.height;
-                document.getElementById('shape-radius').value = layer.radius;
-                document.getElementById('shape-style').value = layer.shapeStyle || 'rect';
-                document.getElementById('shape-filltype').value = layer.fillType || 'solid';
-                document.getElementById('shape-color').value = layer.color || '#1e1e24';
-                document.getElementById('shape-gradstart').value = layer.gradStart || '#121218';
-                document.getElementById('shape-gradend').value = layer.gradEnd || '#000000';
-                document.getElementById('shape-gradangle').value = layer.gradAngle || 135;
-                document.getElementById('shape-border-width').value = layer.borderWidth || 0;
-                document.getElementById('shape-border-color').value = layer.borderColor || '#ffffff';
-                document.getElementById('shape-opacity').value = layer.opacity ?? 100;
-                document.getElementById('shape-blur').value = layer.backdropBlur || 0;
-
-                // Toggle sub-groups
-                if (layer.fillType === 'solid') {
-                    document.getElementById('group-solid-color').style.display = 'block';
-                    document.getElementById('group-gradient').style.display = 'none';
-                } else {
-                    document.getElementById('group-solid-color').style.display = 'none';
-                    document.getElementById('group-gradient').style.display = 'block';
-                }
-            } else if (layer.type === 'image') {
-                document.getElementById('section-properties').style.display = 'none';
-                document.getElementById('section-shape-properties').style.display = 'none';
-                document.getElementById('section-image-properties').style.display = 'block';
-
-                document.getElementById('image-url-input').value = layer.src.startsWith('data:') ? '' : layer.src;
-                document.getElementById('image-width').value = layer.width;
-                document.getElementById('image-height').value = layer.height;
-                document.getElementById('image-opacity').value = layer.opacity ?? 100;
-            }
-        }
-
-        // Update active properties on selected text layer
-        function updateSelectedLayer() {
-            if (!selectedLayerId) return;
-            const layer = layers.find(l => l.id === selectedLayerId);
-            if (layer && layer.type === 'text') {
-                layer.text = document.getElementById('prop-text').value;
-                layer.color = document.getElementById('prop-color').value;
-                layer.fontSize = parseInt(document.getElementById('prop-size').value) || 20;
-                layer.font = document.getElementById('prop-font').value;
-                layer.fontWeight = document.getElementById('prop-weight').value;
-                layer.letterSpacing = parseFloat(document.getElementById('prop-letterspacing').value) || 0;
-                layer.align = document.getElementById('prop-align').value;
-                layer.glow = document.getElementById('prop-glow').checked;
-                layer.glowColor = document.getElementById('prop-glow-color').value;
-                renderCanvas();
-                saveToLocalStorage();
-            }
-        }
-
-        // Update active properties on selected shape layer
-        function updateSelectedShape() {
-            if (!selectedLayerId) return;
-            const layer = layers.find(l => l.id === selectedLayerId);
-            if (layer && layer.type === 'shape') {
-                layer.width = parseInt(document.getElementById('shape-width').value) || 50;
-                layer.height = parseInt(document.getElementById('shape-height').value) || 50;
-                layer.radius = parseInt(document.getElementById('shape-radius').value) || 0;
-                layer.shapeStyle = document.getElementById('shape-style').value;
-                layer.fillType = document.getElementById('shape-filltype').value;
-                layer.color = document.getElementById('shape-color').value;
-                layer.gradStart = document.getElementById('shape-gradstart').value;
-                layer.gradEnd = document.getElementById('shape-gradend').value;
-                layer.gradAngle = parseInt(document.getElementById('shape-gradangle').value);
-                layer.borderWidth = parseInt(document.getElementById('shape-border-width').value) || 0;
-                layer.borderColor = document.getElementById('shape-border-color').value;
-                layer.opacity = parseInt(document.getElementById('shape-opacity').value);
-                layer.backdropBlur = parseInt(document.getElementById('shape-blur').value) || 0;
-                
-                // Toggle sub-groups
-                if (layer.fillType === 'solid') {
-                    document.getElementById('group-solid-color').style.display = 'block';
-                    document.getElementById('group-gradient').style.display = 'none';
-                } else {
-                    document.getElementById('group-solid-color').style.display = 'none';
-                    document.getElementById('group-gradient').style.display = 'block';
-                }
-
-                renderCanvas();
-                saveToLocalStorage();
-            }
-        }
-
-        // Update active properties on selected image layer
-        function updateSelectedImage() {
-            if (!selectedLayerId) return;
-            const layer = layers.find(l => l.id === selectedLayerId);
-            if (layer && layer.type === 'image') {
-                const url = document.getElementById('image-url-input').value.trim();
-                if (url !== '' && !layer.src.startsWith('data:')) {
-                    layer.src = url;
-                }
-                layer.width = parseInt(document.getElementById('image-width').value) || 50;
-                layer.height = parseInt(document.getElementById('image-height').value) || 50;
-                layer.opacity = parseInt(document.getElementById('image-opacity').value);
-                renderCanvas();
-                saveToLocalStorage();
-            }
-        }
-
-        // Local file upload converting to base64
-        function uploadImage() {
-            const fileInput = document.getElementById('image-file-input');
-            if (fileInput.files.length === 0) return;
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                if (!selectedLayerId) return;
-                const layer = layers.find(l => l.id === selectedLayerId);
-                if (layer && layer.type === 'image') {
-                    saveState();
-                    layer.src = e.target.result;
-                    renderCanvas();
-                    saveToLocalStorage();
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Apply pre-configured icon templates
-        function applyPresetIcon(presetType) {
-            if (!selectedLayerId) return;
-            const layer = layers.find(l => l.id === selectedLayerId);
-            if (layer && layer.type === 'image') {
-                saveState();
-                
-                let svg = '';
-                if (presetType === 'live') {
-                    svg = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ff453a" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="%23ff453a"/></svg>';
-                } else if (presetType === 'youtube') {
-                    svg = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff0000"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>';
-                } else if (presetType === 'twitch') {
-                    svg = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%239146ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>';
-                } else if (presetType === 'rec') {
-                    svg = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="%23ff453a"/></svg>';
-                }
-
-                layer.src = svg;
-                renderCanvas();
-                saveToLocalStorage();
-            }
-        }
-
-        // Update transitions settings
-        function updateAnimationSettings() {
-            animationSettings.entry = document.getElementById('anim-entry').value;
-            animationSettings.exit = document.getElementById('anim-exit').value;
-            saveToLocalStorage();
-        }
-
-        // Dragging & Nudging Logic
-        function startDrag(e, id) {
-            if (activeTool !== 'select') return;
-            if (e.cancelable) e.preventDefault();
-            selectedLayerId = id;
-            selectLayer(id);
-
-            const layer = layers.find(l => l.id === id);
-            if (!layer || layer.locked) return;
-
-            isDragging = true;
-
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-            startX = clientX;
-            startY = clientY;
-
-            dragOffsetX = layer.x;
-            dragOffsetY = layer.y;
-
-            const onMove = (ev) => {
-                if (!isDragging) return;
-                const currentX = ev.touches ? ev.touches[0].clientX : ev.clientX;
-                const currentY = ev.touches ? ev.touches[0].clientY : ev.clientY;
-                const dx = (currentX - startX) / canvasZoom;
-                const dy = (currentY - startY) / canvasZoom;
-                
-                layer.x = Math.round(dragOffsetX + dx);
-                layer.y = Math.round(dragOffsetY + dy);
-
-                // Live updates
-                const el = document.getElementById(layer.id);
-                if (el) {
-                    el.style.left = layer.x + 'px';
-                    el.style.top = layer.y + 'px';
-                }
-            };
-
-            const onEnd = () => {
-                isDragging = false;
-                window.removeEventListener('mousemove', onMove);
-                window.removeEventListener('mouseup', onEnd);
-                window.removeEventListener('touchmove', onMove);
-                window.removeEventListener('touchend', onEnd);
-                saveToLocalStorage();
-            };
-
-            window.addEventListener('mousemove', onMove);
-            window.addEventListener('mouseup', onEnd);
-            window.addEventListener('touchmove', onMove, { passive: false });
-            window.addEventListener('touchend', onEnd);
-        }
-
-        // Keyboard Nudge & Shortcuts
-        window.addEventListener('keydown', (e) => {
-            if (!selectedLayerId) return;
-            const layer = layers.find(l => l.id === selectedLayerId);
-            if (!layer) return;
-
-            // Block shortcuts if typing inside input fields
-            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT') {
-                return;
-            }
-
-            const step = e.shiftKey ? 10 : 1;
-
-            if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                saveState();
-                layer.x -= step;
-                renderCanvas();
-            } else if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                saveState();
-                layer.x += step;
-                renderCanvas();
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                saveState();
-                layer.y -= step;
-                renderCanvas();
-            } else if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                saveState();
-                layer.y += step;
-                renderCanvas();
-            } else if (e.key === 'Delete') {
-                e.preventDefault();
-                deleteLayer(layer.id);
-            } else if (e.key === 'd' && e.ctrlKey) {
-                e.preventDefault();
-                duplicateSelectedLayer();
-            } else if (e.key === 'z' && e.ctrlKey) {
-                e.preventDefault();
-                undo();
-            } else if (e.key === 'y' && e.ctrlKey) {
-                e.preventDefault();
-                redo();
-            }
-        });
-
-        // Simulated AI Style Generator
-        function generateAIStyle() {
-            const prompt = document.getElementById('ai-prompt').value.toLowerCase().trim();
-            if (prompt === '') {
-                alert("Por favor escribe un prompt de diseño antes de generar.");
-                return;
-            }
-
-            // Find backdrop shape
-            let bgLayer = layers.find(l => l.type === 'shape' && l.id === 'layer-bg');
-            if (!bgLayer) {
-                bgLayer = layers.find(l => l.type === 'shape');
-            }
-
-            if (!bgLayer) {
-                alert("Añade un fondo zócalo al lienzo para poder aplicar el estilo de la IA.");
-                return;
-            }
-
-            saveState();
-
-            let gradStart = '#121218';
-            let gradEnd = '#000000';
-            let borderWidth = 1;
-            let borderColor = 'rgba(255, 255, 255, 0.1)';
-            let glow = false;
-            let primaryColor = '#00d2ff'; // Default neon blue
-
-            if (prompt.includes('fuego') || prompt.includes('rojo') || prompt.includes('calido')) {
-                gradStart = 'rgba(235, 15, 15, 0.9)';
-                gradEnd = 'rgba(255, 80, 10, 0.95)';
-                borderColor = 'rgba(255, 100, 100, 0.4)';
-                borderWidth = 2;
-                glow = true;
-                primaryColor = '#ff453a';
-            } else if (prompt.includes('cyberpunk') || prompt.includes('neon') || prompt.includes('rosa')) {
-                gradStart = 'rgba(255, 0, 128, 0.85)';
-                gradEnd = 'rgba(0, 210, 255, 0.9)';
-                borderColor = 'rgba(255, 0, 128, 0.5)';
-                borderWidth = 2;
-                glow = true;
-                primaryColor = '#ff007f';
-            } else if (prompt.includes('tecnologia') || prompt.includes('azul') || prompt.includes('plata')) {
-                gradStart = 'rgba(10, 30, 80, 0.95)';
-                gradEnd = 'rgba(0, 210, 255, 0.9)';
-                borderColor = 'rgba(0, 210, 255, 0.5)';
-                borderWidth = 1;
-                glow = true;
-                primaryColor = '#00d2ff';
-            } else if (prompt.includes('elegante') || prompt.includes('dorado') || prompt.includes('oro') || prompt.includes('corporativo')) {
-                gradStart = 'rgba(20, 20, 20, 0.98)';
-                gradEnd = 'rgba(40, 35, 25, 0.98)';
-                borderColor = '#c5a059';
-                borderWidth = 2;
-                glow = false;
-                primaryColor = '#c5a059';
-            } else if (prompt.includes('verde') || prompt.includes('bosque') || prompt.includes('ecologico')) {
-                gradStart = 'rgba(10, 60, 25, 0.9)';
-                gradEnd = 'rgba(48, 209, 88, 0.95)';
-                borderColor = 'rgba(48, 209, 88, 0.4)';
-                borderWidth = 1;
-                glow = true;
-                primaryColor = '#30d158';
-            }
-
-            bgLayer.fillType = 'gradient';
-            bgLayer.gradStart = gradStart;
-            bgLayer.gradEnd = gradEnd;
-            bgLayer.gradAngle = 135;
-            bgLayer.borderWidth = borderWidth;
-            bgLayer.borderColor = borderColor;
-            bgLayer.glow = glow;
-
-            // Update text color
-            const titleLayer = layers.find(l => l.id === 'layer-title' || l.type === 'text');
-            if (titleLayer) {
-                titleLayer.color = primaryColor;
-                titleLayer.glowColor = primaryColor;
-            }
-
-            renderCanvas();
-            updatePropertiesPanel();
-            saveToLocalStorage();
-            alert(`✨ Estilo IA generado a partir de tu prompt: "${prompt}"`);
-        }
-
-        // Load Preset Templates
-        function loadTemplate(templateType) {
-            if (!confirm("¿Deseas cargar esta plantilla? Esto reemplazará tu diseño actual.")) {
-                return;
-            }
-
-            saveState();
-
-            if (templateType === 'cyberpunk') {
-                layers = [
-                    {
-                        id: 'layer-bg',
-                        type: 'shape',
-                        name: 'Fondo Cyber',
-                        x: 80,
-                        y: 830,
-                        width: 750,
-                        height: 140,
-                        radius: 0,
-                        shapeStyle: 'slanted',
-                        fillType: 'gradient',
-                        color: '#1e1e24',
-                        gradStart: 'rgba(255, 0, 128, 0.85)',
-                        gradEnd: 'rgba(0, 210, 255, 0.85)',
-                        gradAngle: 135,
-                        borderWidth: 2,
-                        borderColor: 'rgba(255, 0, 128, 0.6)',
-                        opacity: 100,
-                        backdropBlur: 15,
-                        glow: true,
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-title',
-                        type: 'text',
-                        name: 'Título Cyber',
-                        text: 'MATCH LIVE',
-                        x: 140,
-                        y: 855,
-                        fontSize: 42,
-                        color: '#ffffff',
-                        font: 'Orbitron',
-                        fontWeight: '900',
-                        letterSpacing: 2,
-                        align: 'left',
-                        glow: true,
-                        glowColor: '#00d2ff',
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-sub',
-                        type: 'text',
-                        name: 'Subtítulo Cyber',
-                        text: 'STREAMING EN VIVO',
-                        x: 140,
-                        y: 915,
-                        fontSize: 20,
-                        color: '#00d2ff',
-                        font: 'Montserrat',
-                        fontWeight: '700',
-                        letterSpacing: 1,
-                        align: 'left',
-                        glow: false,
-                        glowColor: '#00d2ff',
-                        visible: true,
-                        locked: false
-                    }
-                ];
-            } else if (templateType === 'corporate') {
-                layers = [
-                    {
-                        id: 'layer-bg',
-                        type: 'shape',
-                        name: 'Fondo Elegante',
-                        x: 100,
-                        y: 830,
-                        width: 700,
-                        height: 130,
-                        radius: 4,
-                        shapeStyle: 'twotone',
-                        fillType: 'solid',
-                        color: 'rgba(10, 10, 12, 0.95)',
-                        borderWidth: 1,
-                        borderColor: '#c5a059',
-                        opacity: 100,
-                        backdropBlur: 20,
-                        glow: false,
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-title',
-                        type: 'text',
-                        name: 'Título Oro',
-                        text: 'Dr. Alejandro Mendoza',
-                        x: 140,
-                        y: 850,
-                        fontSize: 36,
-                        color: '#c5a059',
-                        font: 'Playfair Display',
-                        fontWeight: '700',
-                        letterSpacing: 0.5,
-                        align: 'left',
-                        glow: false,
-                        glowColor: '#c5a059',
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-sub',
-                        type: 'text',
-                        name: 'Subtítulo Oro',
-                        text: 'DIRECTOR GENERAL DE EMISIONES',
-                        x: 140,
-                        y: 910,
-                        fontSize: 16,
-                        color: '#a0a0ab',
-                        font: 'Inter',
-                        fontWeight: '700',
-                        letterSpacing: 2,
-                        align: 'left',
-                        glow: false,
-                        glowColor: '#a0a0ab',
-                        visible: true,
-                        locked: false
-                    }
-                ];
-            } else if (templateType === 'esports') {
-                layers = [
-                    {
-                        id: 'layer-bg',
-                        type: 'shape',
-                        name: 'Fondo Esports',
-                        x: 80,
-                        y: 830,
-                        width: 650,
-                        height: 140,
-                        radius: 0,
-                        shapeStyle: 'chevron',
-                        fillType: 'gradient',
-                        color: '#1e1e24',
-                        gradStart: 'rgba(235, 15, 15, 0.95)',
-                        gradEnd: 'rgba(20, 20, 25, 0.95)',
-                        gradAngle: 90,
-                        borderWidth: 0,
-                        borderColor: '#ff453a',
-                        opacity: 100,
-                        backdropBlur: 0,
-                        glow: true,
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-title',
-                        type: 'text',
-                        name: 'Título Gamer',
-                        text: 'NUEVO RECORD',
-                        x: 150,
-                        y: 855,
-                        fontSize: 38,
-                        color: '#ffffff',
-                        font: 'Orbitron',
-                        fontWeight: '900',
-                        letterSpacing: 1.5,
-                        align: 'left',
-                        glow: true,
-                        glowColor: '#ff453a',
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-sub',
-                        type: 'text',
-                        name: 'Subtítulo Gamer',
-                        text: 'Puntuación Máxima: 994,200 pts',
-                        x: 150,
-                        y: 915,
-                        fontSize: 18,
-                        color: '#ffdd00',
-                        font: 'Montserrat',
-                        fontWeight: '700',
-                        letterSpacing: 0,
-                        align: 'left',
-                        glow: false,
-                        glowColor: '#ffdd00',
-                        visible: true,
-                        locked: false
-                    }
-                ];
-            } else if (templateType === 'news') {
-                layers = [
-                    {
-                        id: 'layer-bg-accent',
-                        type: 'shape',
-                        name: 'Barra Alerta Roja',
-                        x: 100,
-                        y: 810,
-                        width: 250,
-                        height: 40,
-                        radius: 0,
-                        shapeStyle: 'rect',
-                        fillType: 'solid',
-                        color: '#ff453a',
-                        borderWidth: 0,
-                        borderColor: '#ffffff',
-                        opacity: 100,
-                        backdropBlur: 0,
-                        glow: false,
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-bg',
-                        type: 'shape',
-                        name: 'Fondo Noticias',
-                        x: 100,
-                        y: 850,
-                        width: 1000,
-                        height: 100,
-                        radius: 0,
-                        shapeStyle: 'rect',
-                        fillType: 'solid',
-                        color: '#ffffff',
-                        borderWidth: 0,
-                        borderColor: '#ffffff',
-                        opacity: 100,
-                        backdropBlur: 0,
-                        glow: true,
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-title',
-                        type: 'text',
-                        name: 'Texto Alerta',
-                        text: 'ÚLTIMA HORA',
-                        x: 125,
-                        y: 818,
-                        fontSize: 20,
-                        color: '#ffffff',
-                        font: 'Outfit',
-                        fontWeight: '800',
-                        letterSpacing: 1.5,
-                        align: 'left',
-                        glow: false,
-                        visible: true,
-                        locked: false
-                    },
-                    {
-                        id: 'layer-sub',
-                        type: 'text',
-                        name: 'Texto Noticias',
-                        text: 'Se reportan fuertes lluvias acompañadas de granizo en el sector norte de la ciudad.',
-                        x: 125,
-                        y: 885,
-                        fontSize: 26,
-                        color: '#111116',
-                        font: 'Inter',
-                        fontWeight: '700',
-                        letterSpacing: 0,
-                        align: 'left',
-                        glow: false,
-                        visible: true,
-                        locked: false
-                    }
-                ];
-            }
-
-            selectedLayerId = 'layer-bg';
-            renderCanvas();
-            renderLayerList();
-            updatePropertiesPanel();
-            switchTab('props');
-            saveToLocalStorage();
-        }
-
-        // Preview Animation
-        function playPreview() {
-            const container = document.getElementById('canvas-container');
-            const btn = document.getElementById('btn-play-preview');
-            
-            container.className = 'canvas-container';
-            void container.offsetWidth; // Trigger reflow
-
-            container.classList.add('anim-entry-' + animationSettings.entry);
-            if (btn) btn.innerText = "⏹ Detener Animación";
-
-            if (window.animTimeout) clearTimeout(window.animTimeout);
-            window.animTimeout = setTimeout(() => {
-                container.className = 'canvas-container';
-                void container.offsetWidth;
-                container.classList.add('anim-exit-' + animationSettings.exit);
-                if (btn) btn.innerText = "▶ Reproducir Entrada";
-            }, 4000);
-        }
-
-        // Export Transparent PNG using clean offscreen canvas drawing
-        function exportPNG() {
-            const canvasEl = document.getElementById('canvas');
-            
-            // Build an inline SVG representation of layers
-            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080">`;
-            
-            // We need to define linear gradients in <defs>
-            svgContent += `<defs>`;
-            layers.forEach((layer, idx) => {
-                if (layer.type === 'shape' && layer.fillType === 'gradient') {
-                    // SVG angle to coordinates translation
-                    const angleRad = (layer.gradAngle || 135) * Math.PI / 180;
-                    const x1 = Math.round(50 - Math.cos(angleRad) * 50) + '%';
-                    const y1 = Math.round(50 - Math.sin(angleRad) * 50) + '%';
-                    const x2 = Math.round(50 + Math.cos(angleRad) * 50) + '%';
-                    const y2 = Math.round(50 + Math.sin(angleRad) * 50) + '%';
-                    
-                    svgContent += `
-                        <linearGradient id="grad-${idx}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}">
-                            <stop offset="0%" stop-color="${layer.gradStart || '#121218'}" />
-                            <stop offset="100%" stop-color="${layer.gradEnd || '#000000'}" />
-                        </linearGradient>`;
-                }
-            });
-            svgContent += `</defs>`;
-
-            layers.forEach((layer, idx) => {
-                if (!layer.visible) return;
-
-                if (layer.type === 'text') {
-                    const shadowGlow = layer.glow ? `filter="drop-shadow(0px 0px 6px ${layer.glowColor || layer.color})"` : '';
-                    const fontStyleStr = layer.font === 'Playfair Display' ? 'italic' : 'normal';
-                    svgContent += `
-                        <text x="${layer.x}" y="${layer.y + layer.fontSize * 0.85}" 
-                              fill="${layer.color}" 
-                              font-family="${layer.font}, sans-serif" 
-                              font-size="${layer.fontSize}px" 
-                              font-weight="${layer.fontWeight || 'normal'}"
-                              font-style="${fontStyleStr}"
-                              letter-spacing="${layer.letterSpacing || 0}px"
-                              ${shadowGlow}>
-                            ${layer.text}
-                        </text>`;
-                } else if (layer.type === 'shape') {
-                    const fill = layer.fillType === 'solid' ? layer.color : `url(#grad-${idx})`;
-                    const stroke = (layer.borderWidth && layer.borderWidth > 0) ? `stroke="${layer.borderColor}" stroke-width="${layer.borderWidth}"` : '';
-                    
-                    // Shape style mapping
-                    if (layer.shapeStyle === 'slanted') {
-                        // Slanted shape skew representation
-                        const x = layer.x;
-                        const y = layer.y;
-                        const w = layer.width;
-                        const h = layer.height;
-                        const skewOffset = Math.round(h * Math.tan(15 * Math.PI / 180));
-                        svgContent += `
-                            <polygon points="${x + skewOffset},${y} ${x + w + skewOffset},${y} ${x + w},${y + h} ${x},${y + h}"
-                                     fill="${fill}" opacity="${(layer.opacity ?? 100) / 100}" ${stroke} />`;
-                    } else if (layer.shapeStyle === 'chevron') {
-                        const x = layer.x;
-                        const y = layer.y;
-                        const w = layer.width;
-                        const h = layer.height;
-                        const p1 = `${x},${y}`;
-                        const p2 = `${x + w * 0.9},${y}`;
-                        const p3 = `${x + w},${y + h * 0.5}`;
-                        const p4 = `${x + w * 0.9},${y + h}`;
-                        const p5 = `${x},${y + h}`;
-                        const p6 = `${x + w * 0.1},${y + h * 0.5}`;
-                        svgContent += `
-                            <polygon points="${p1} ${p2} ${p3} ${p4} ${p5} ${p6}"
-                                     fill="${fill}" opacity="${(layer.opacity ?? 100) / 100}" ${stroke} />`;
-                    } else {
-                        // Rect and Twotone
-                        svgContent += `
-                            <rect x="${layer.x}" y="${layer.y}" width="${layer.width}" height="${layer.height}" 
-                                  rx="${layer.radius}" ry="${layer.radius}" 
-                                  fill="${fill}" opacity="${(layer.opacity ?? 100) / 100}" ${stroke} />`;
-                        
-                        if (layer.shapeStyle === 'twotone') {
-                            svgContent += `
-                                <rect x="${layer.x}" y="${layer.y}" width="8" height="${layer.height}" 
-                                      rx="${layer.radius}" ry="${layer.radius}" 
-                                      fill="#00d2ff" />`;
-                        }
-                    }
-                } else if (layer.type === 'image') {
-                    svgContent += `
-                        <image href="${layer.src}" x="${layer.x}" y="${layer.y}" 
-                               width="${layer.width}" height="${layer.height}" 
-                               opacity="${(layer.opacity ?? 100) / 100}" />`;
-                }
-            });
-
-            svgContent += `</svg>`;
-
-            const img = new Image();
-            const svgBlob = new Blob([svgContent], {type: 'image/svg+xml;charset=utf-8'});
-            const url = URL.createObjectURL(svgBlob);
-            
-            img.onload = function() {
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = 1920;
-                tempCanvas.height = 1080;
-                const ctx = tempCanvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                
-                const pngUrl = tempCanvas.toDataURL('image/png');
-                const downloadLink = document.createElement('a');
-                downloadLink.href = pngUrl;
-                downloadLink.download = 'maxim_overlay.png';
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-                URL.revokeObjectURL(url);
-            };
-
-            img.src = url;
-        }
-
-        // Show OBS Link Generator
-        function showObsLink() {
-            const serialized = encodeURIComponent(JSON.stringify({
-                layers: layers,
-                animations: animationSettings
-            }));
-            const currentUrl = window.location.href.split('?')[0];
-            const obsUrl = currentUrl + `?live=1&data=${serialized}`;
-            
-            document.getElementById('obs-url-input').value = obsUrl;
-            document.getElementById('dialog-obs').classList.add('active');
-        }
-
-        function copyObsUrl() {
-            const input = document.getElementById('obs-url-input');
-            input.select();
-            input.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(input.value);
-            alert("¡Enlace copiado con éxito! Pégalo en tu Fuente de Navegador en OBS Studio.");
-            closeDialogs();
-        }
-
-        function closeDialogs() {
-            document.querySelectorAll('.dialog-overlay').forEach(d => d.classList.remove('active'));
-        }
-
-        // Responsive and app helpers
-        function checkBanner() {
-            const isAndroidApp = navigator.userAgent.includes("MaximAndroidApp");
-            const isWindowsApp = window.chrome && window.chrome.webview;
-            const isApp = isAndroidApp || isWindowsApp;
-            const bannerClosed = localStorage.getItem('maxim-banner-closed') === 'true';
-
-            if (!isApp && !bannerClosed) {
-                document.getElementById('desktop-app-banner').style.display = 'block';
-            }
-        }
-
-        function closeAppBanner() {
-            document.getElementById('desktop-app-banner').style.display = 'none';
-            localStorage.setItem('maxim-banner-closed', 'true');
-        }
-
-        function toggleMobileDrawer() {
-            const drawer = document.getElementById('control-panel');
-            const toggleText = document.getElementById('drawer-toggle-text');
-            if (drawer) {
-                drawer.classList.toggle('open');
-                if (drawer.classList.contains('open')) {
-                    toggleText.innerText = '🔽 Ocultar Panel';
-                } else {
-                    toggleText.innerText = '🔼 Mostrar Propiedades y Capas';
-                }
-            }
-        }
-
-        // Flashback Audio Generation
-        function generateFlashbackAudio() {
-            const text = document.getElementById('flashback-text').value;
-            const voice = document.getElementById('flashback-voice').value;
-            if (!text.trim()) {
-                alert("Por favor, ingresa los titulares de la noticia para generar la voz.");
-                return;
-            }
-            alert(`🎙️ Audio generado con éxito para voz: ${voice}\nTitulares procesados correctamente.`);
-            const urlInput = document.getElementById('flashback-obs-url');
-            urlInput.value = `http://localhost:4000/api/flashback/stream?voice=${voice}&text=${encodeURIComponent(text)}`;
-        }
-
-        function playFlashbackAudio() {
-            const text = document.getElementById('flashback-text').value;
-            if (!text.trim()) {
-                alert("Primero debes ingresar texto y generar el audio.");
-                return;
-            }
-            
-            const btn = document.getElementById('btn-play-flashback');
-            if (btn.innerText.includes('Vista Previa')) {
-                btn.innerText = '⏹ Detener Audio';
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    const voiceVal = document.getElementById('flashback-voice').value;
-                    const voices = window.speechSynthesis.getVoices();
-                    const matched = voices.find(v => v.lang.startsWith('es'));
-                    if (matched) utterance.voice = matched;
-                    
-                    utterance.onend = () => {
-                        btn.innerText = '▶ Vista Previa';
-                    };
-                    window.speechSynthesis.speak(utterance);
-                } else {
-                    setTimeout(() => {
-                        btn.innerText = '▶ Vista Previa';
-                    }, 4000);
-                }
-            } else {
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                }
-                btn.innerText = '▶ Vista Previa';
-            }
-        }
-
-        function copyFlashbackObsUrl() {
-            const copyText = document.getElementById('flashback-obs-url');
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            document.execCommand('copy');
-            alert("📋 Enlace de audio copiado para OBS Studio.");
-        }
-    </script>
 </body>
 </html>
