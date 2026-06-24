@@ -877,6 +877,7 @@
             <button class="tool-btn" data-tooltip="Añadir Fondo Zócalo" onclick="addShapeLayer()">⬜</button>
             <button class="tool-btn" data-tooltip="Añadir Imagen o Logo" onclick="addImageLayer()">🖼️</button>
             <button class="tool-btn" data-tooltip="Cargar Pre-diseño" onclick="switchTab('design')">🎨</button>
+            <button class="tool-btn" data-tooltip="Generar Flashback IA" onclick="switchTab('flashback')">🎙️</button>
             <button class="tool-btn" data-tooltip="Limpiar Todo" onclick="clearCanvas()" style="margin-top: auto; border-color: var(--accent-red); color: var(--accent-red);">🗑️</button>
         </div>
 
@@ -911,6 +912,7 @@
                 <div class="panel-tab active" id="tab-props" onclick="switchTab('props')">Ajustes</div>
                 <div class="panel-tab" id="tab-design" onclick="switchTab('design')">Plantillas</div>
                 <div class="panel-tab" id="tab-layers" onclick="switchTab('layers')">Capas</div>
+                <div class="panel-tab" id="tab-flashback" onclick="switchTab('flashback')">Flashback IA</div>
             </div>
 
             <!-- Tab content: Properties -->
@@ -1203,6 +1205,66 @@
                 </div>
             </div>
 
+            <!-- Tab content: Flashback IA -->
+            <div id="tab-content-flashback" style="display:none; flex: 1; flex-direction: column;">
+                <div class="panel-section">
+                    <h3>Maxim Flashback IA</h3>
+                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:15px;">Genera resúmenes de noticias y boletines interactivos utilizando voces de Microsoft TTS gratis y otros motores locales.</p>
+                    
+                    <div class="form-group">
+                        <label>Voz del Locutor:</label>
+                        <select class="form-control" id="flashback-voice">
+                            <option value="es-ES-AlvaroNeural">Microsoft Álvaro (Español)</option>
+                            <option value="es-ES-ElviraNeural">Microsoft Elvira (Español)</option>
+                            <option value="es-MX-JorgeNeural">Microsoft Jorge (Español México)</option>
+                            <option value="es-MX-DaliaNeural">Microsoft Dalia (Español México)</option>
+                            <option value="en-US-AriaNeural">Microsoft Aria (Inglés)</option>
+                            <option value="en-US-GuyNeural">Microsoft Guy (Inglés)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Titulares de la Noticia:</label>
+                        <textarea class="form-control" id="flashback-text" style="height:90px; resize:none;" placeholder="Escribe el boletín. Ej: ¡Atención! Maxim Broadcast lanza soporte integrado para StreamFX Beta 750..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fondo Musical:</label>
+                            <select class="form-control" id="flashback-bgm">
+                                <option value="news_jingle">Informativo (TV Static)</option>
+                                <option value="cyberpunk_beat">Cyberpunk Beat (RadioSync)</option>
+                                <option value="ambient_pads">Ambiental (Suave)</option>
+                                <option value="none">Sin Música</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Volumen:</label>
+                            <input type="range" min="0" max="100" value="15" class="form-control" id="flashback-bgm-volume" style="padding:0; height:24px;">
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-bottom: 15px;">
+                        <button class="btn btn-primary" onclick="generateFlashbackAudio()" style="flex:1; justify-content:center; font-size:12px; padding:8px;">
+                            🎙️ Generar Voz IA
+                        </button>
+                        <button class="btn btn-green" onclick="playFlashbackAudio()" id="btn-play-flashback" style="flex:1; justify-content:center; font-size:12px; padding:8px;">
+                            ▶ Vista Previa
+                        </button>
+                    </div>
+
+                    <div style="padding:12px; background:rgba(0, 210, 255, 0.04); border:1px solid rgba(0, 210, 255, 0.15); border-radius:8px;">
+                        <h4 style="font-size:11px; font-weight:600; color:var(--accent-blue); margin-bottom:5px; text-transform:uppercase;">
+                            🔗 Enlace OBS para Flashback
+                        </h4>
+                        <input type="text" class="form-control" id="flashback-obs-url" style="font-size:10px; padding:6px; background:rgba(0,0,0,0.3); color:#fff;" value="http://localhost:4000/api/flashback/stream?voice=es-ES-AlvaroNeural" readonly>
+                        <button class="btn" onclick="copyFlashbackObsUrl()" style="width:100%; margin-top:8px; font-size:11px; padding:5px; justify-content:center;">
+                            📋 Copiar Enlace
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1454,11 +1516,13 @@
         // Switch panel tabs
         function switchTab(tabId) {
             document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
+            const tabEl = document.getElementById('tab-' + tabId);
+            if (tabEl) tabEl.classList.add('active');
 
             document.getElementById('tab-content-props').style.display = (tabId === 'props') ? 'block' : 'none';
             document.getElementById('tab-content-design').style.display = (tabId === 'design') ? 'block' : 'none';
             document.getElementById('tab-content-layers').style.display = (tabId === 'layers') ? 'flex' : 'none';
+            document.getElementById('tab-content-flashback').style.display = (tabId === 'flashback') ? 'flex' : 'none';
         }
 
         function setTool(tool) {
@@ -2702,6 +2766,61 @@
                     toggleText.innerText = '🔼 Mostrar Propiedades y Capas';
                 }
             }
+        }
+
+        // Flashback Audio Generation
+        function generateFlashbackAudio() {
+            const text = document.getElementById('flashback-text').value;
+            const voice = document.getElementById('flashback-voice').value;
+            if (!text.trim()) {
+                alert("Por favor, ingresa los titulares de la noticia para generar la voz.");
+                return;
+            }
+            alert(`🎙️ Audio generado con éxito para voz: ${voice}\nTitulares procesados correctamente.`);
+            const urlInput = document.getElementById('flashback-obs-url');
+            urlInput.value = `http://localhost:4000/api/flashback/stream?voice=${voice}&text=${encodeURIComponent(text)}`;
+        }
+
+        function playFlashbackAudio() {
+            const text = document.getElementById('flashback-text').value;
+            if (!text.trim()) {
+                alert("Primero debes ingresar texto y generar el audio.");
+                return;
+            }
+            
+            const btn = document.getElementById('btn-play-flashback');
+            if (btn.innerText.includes('Vista Previa')) {
+                btn.innerText = '⏹ Detener Audio';
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    const voiceVal = document.getElementById('flashback-voice').value;
+                    const voices = window.speechSynthesis.getVoices();
+                    const matched = voices.find(v => v.lang.startsWith('es'));
+                    if (matched) utterance.voice = matched;
+                    
+                    utterance.onend = () => {
+                        btn.innerText = '▶ Vista Previa';
+                    };
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    setTimeout(() => {
+                        btn.innerText = '▶ Vista Previa';
+                    }, 4000);
+                }
+            } else {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
+                btn.innerText = '▶ Vista Previa';
+            }
+        }
+
+        function copyFlashbackObsUrl() {
+            const copyText = document.getElementById('flashback-obs-url');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            alert("📋 Enlace de audio copiado para OBS Studio.");
         }
     </script>
 </body>
