@@ -15,6 +15,10 @@ Este repositorio contiene las compilaciones finales de producción listas para s
 *   **Sin Crashes al Iniciar:** Totalmente compatible y probado con OBS Studio 32.1.2.
 *   **Totalmente de Código Abierto:** Integra un menú de acceso rápido en OBS que te lleva al repositorio principal de desarrollo.
 *   **Generador de Caracteres y Zócalos:** Control interactivo de logos en pantalla y texto marquesina dinámico (Ticker) desde la mesa de control.
+*   **Generador de Gráficos de Redes:** Widget para insertar cintillos en tiempo real, tercios inferiores interactivos y visualización de chat en pantalla.
+*   **Control Total Remoto:** Cambia de escena, silencia tus micrófonos y dispara efectos de sonido rápidos directamente desde tu móvil.
+*   **Efectos y Cancelación de Ruido Inteligente:** Algoritmos de filtrado nativos para remoción de eco acústico y ruidos de fondo no deseados.
+*   **Detección Inteligente NDI / SRT:** Búsqueda automática de cámaras de teléfonos celulares en la red y auto-configuración de fuentes, con soporte para Adobe Premiere Pro o After Effects mediante el plugin especial *Maxim to OBS*.
 
 ## Instalación Rápida
 
