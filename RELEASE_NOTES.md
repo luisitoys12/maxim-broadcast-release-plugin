@@ -11,12 +11,16 @@ Esta versión representa el salto definitivo de Maxim Broadcast a ecosistemas na
 
 ### 🆕 Novedades Principales
 
-#### 1. Aplicación Móvil Unificada (`MaximRemote.apk`)
+#### 1. Paneles Nativos C++ en OBS Studio (`maxim-fx`)
+*   **Docks Nativos Integrados**: Zócalos de "Playout Remoto" y "Diseñador de Overlays" integrados directamente como paneles nativos Qt dentro de la interfaz de OBS Studio, cargando de forma offline sin depender de ningún navegador.
+*   **Editor Nactivo por GPU**: Permite diseñar figuras, textos con brillo de neón, redondeados y degradados con un alto rendimiento de renderizado por hardware local de Qt.
+
+#### 2. Aplicación Móvil Unificada (`MaximRemote.apk`)
 *   **Editor e Integración Local**: Incluye el editor gráfico directamente en los recursos de la aplicación, haciéndolo 100% independiente del servidor web, offline y con renderizado acelerado.
 *   **Dashboard de Control Premium**: Pantalla de inicio renovada con diseño de alta fidelidad que permite alternar fácilmente entre la mesa de control de Playout (conexión por IP manual o escaneo de código QR) y el Diseñador de Overlays.
 *   **UserAgent Nativo**: Inyección de UserAgent `"MaximAndroidApp"` para desactivar el banner web de descarga y optimizar la visualización de capas de texto en pantallas móviles.
 
-#### 2. Extensión de Integración Adobe CEP (`Maxim to OBS`)
+#### 3. Extensión de Integración Adobe CEP (`Maxim to OBS`)
 *   **Soporte Multiaplicación**: Panel de herramientas compatible con Adobe Premiere Pro, After Effects y Photoshop.
 *   **Integración Bidireccional Completa**:
     *   *Marcadores Dinámicos (Timeline Sync)*: Genera marcadores automáticamente en la línea de tiempo activa de Adobe al ocurrir cambios de escena en OBS Studio en vivo.
@@ -24,9 +28,9 @@ Esta versión representa el salto definitivo de Maxim Broadcast a ecosistemas na
     *   *Enviar Fotograma Activo*: Exporta el lienzo de diseño en Photoshop o la composición en After Effects actualizando la fuente de imagen `MaximFrameSource` en OBS de forma instantánea.
 *   **Licenciamiento Comercial (Código Cerrado)**: Interfaz de bloqueo integrada. Requiere una clave de licencia en formato `MAXIM-XXXX-XXXX-XXXX` para habilitar las características premium.
 
-#### 3. Centro de Documentación y Descarga (`editor.html` / `index.html`)
-*   **Descontinuación del Editor Web**: La dirección tradicional de `editor.html` ha sido reemplazada por una guía interactiva oficial de usuario y manual de instalación bidireccional.
-*   **Enlaces de Descarga Mejorados**: Inclusión del parámetro `?raw=true` en los enlaces de GitHub para forzar la descarga de los binarios (`.apk` y `.zip`) sin bloqueos en navegadores de teléfonos celulares Android y iPhones.
+#### 4. Centro de Documentación y Descarga (`editor.html` / `index.html`)
+*   **Descontinuación del Editor Web**: La dirección tradicional de `editor.html` ha sido reemplazada por una guía interactiva oficial de usuario y manual de instalación de descargas con advertencias de funciones limitadas para navegadores.
+*   **Enlaces de Descarga Mejorados**: Migración a URLs directas de tipo `raw` de GitHub para evitar bloqueos y pantallas muertas en dispositivos móviles.
 
 ---
 
@@ -34,10 +38,10 @@ Esta versión representa el salto definitivo de Maxim Broadcast a ecosistemas na
 
 | Componente | Archivo / Descarga | Plataforma |
 |------------|---------|------------|
-| Suite Todo-en-Uno (OBS & Playout) | [Descargar (.exe)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/MaximBroadcast-Setup.exe?raw=true) | Windows 10 / 11 (64-bit) |
-| App Móvil (Playout & Editor) | [Descargar (.apk)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/MaximRemote.apk?raw=true) | Android (Tablets y Celulares) |
-| Editor de Overlays Local | [Descargar (.exe)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/MaximEditor.exe?raw=true) | Windows 10 / 11 (64-bit) |
-| Extensión Adobe CEP (Código Cerrado) | [Descargar (.zip)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/maxim-to-obs-adobe.zip?raw=true) | Premiere, AE y Photoshop |
+| Suite Todo-en-Uno (OBS & Playout) | [Descargar (.exe)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximBroadcast-Setup.exe) | Windows 10 / 11 (64-bit) |
+| App Móvil (Playout & Editor) | [Descargar (.apk)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximRemote.apk) | Android (Tablets y Celulares) |
+| Editor de Overlays Local | [Descargar (.exe)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximEditor.exe) | Windows 10 / 11 (64-bit) |
+| Extensión Adobe CEP (Código Cerrado) | [Descargar (.zip)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/maxim-to-obs-adobe.zip) | Premiere, AE y Photoshop |
 
 ---
 

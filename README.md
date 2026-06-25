@@ -8,15 +8,16 @@
 
 Este repositorio contiene las compilaciones de producción oficiales listas para su uso. Puedes descargarlas directamente haciendo clic en los siguientes enlaces (parámetro de descarga forzada habilitado para dispositivos móviles):
 
-1.  **[MaximBroadcast-Setup.exe](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/MaximBroadcast-Setup.exe?raw=true)**: Instalador inteligente todo-en-uno que configura el plugin nativo en tu OBS Studio y crea el acceso directo a la estación de Playout.
-2.  **[MaximRemote.apk (Android)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/MaximRemote.apk?raw=true)**: Aplicación móvil híbrida para tablets y teléfonos Android que combina la **Mesa de Control Playout** (remota) con el **Diseñador de Overlays** (local y 100% offline).
-3.  **[MaximEditor.exe (PC)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/MaximEditor.exe?raw=true)**: Editor gráfico de escritorio para Windows, optimizado localmente para diseñar zócalos y overlays sin consumo de red.
-4.  **[Maxim to OBS Extension (Adobe CEP)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/blob/main/maxim-to-obs-adobe.zip?raw=true)**: Panel de integración bidireccional para **Adobe Premiere Pro, After Effects y Photoshop**. *Nota: Este componente es de código cerrado y requiere clave de licencia comercial.*
+1.  **[MaximBroadcast-Setup.exe](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximBroadcast-Setup.exe)**: Instalador inteligente todo-en-uno que configura el plugin nativo en tu OBS Studio (incluyendo los nuevos docks nativos de Playout y Editor) y crea el acceso directo a la estación de Playout.
+2.  **[MaximRemote.apk (Android)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximRemote.apk)**: Aplicación móvil híbrida para tablets y teléfonos Android que combina la **Mesa de Control Playout** (remota) con el **Diseñador de Overlays** (local y 100% offline).
+3.  **[MaximEditor.exe (PC)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximEditor.exe)**: Editor gráfico de escritorio para Windows, optimizado localmente para diseñar zócalos y overlays sin consumo de red.
+4.  **[Maxim to OBS Extension (Adobe CEP)](https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/maxim-to-obs-adobe.zip)**: Panel de integración bidireccional para **Adobe Premiere Pro, After Effects y Photoshop**. *Nota: Este componente es de código cerrado y requiere clave de licencia comercial.*
 
 ---
 
 ## 📺 Características Principales
 
+*   **Paneles Nativos C++ en OBS Studio**: Zócalos y paneles (docks) de Playout y Editor integrados directamente en la interfaz de OBS mediante widgets Qt nativos, 100% offline y sin consumo de recursos del navegador.
 *   **App Móvil Unificada (APK)**: ¡Dile adiós a la versión web! La aplicación Android te permite conectarte de forma remota a tu playout (mediante IP o escaneo de código QR) y a la vez diseñar zócalos y tercios inferiores de forma offline directamente en tu dispositivo móvil.
 *   **Integración Bidireccional OBS ↔ Adobe**: La extensión CEP conecta tus programas de diseño con tu transmisión en vivo mediante WebSocket:
     *   *Marcadores Dinámicos*: Al cambiar de escena en OBS, se inyectan marcadores de forma automática en la línea de tiempo activa de Premiere o After Effects.
