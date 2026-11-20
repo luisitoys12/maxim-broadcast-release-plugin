@@ -310,66 +310,8 @@
                 <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/MaximBroadcast-Setup.exe" class="btn-download">Descargar Suite</a>
             </div>
 
-            <!-- Adobe Extension -->
-            <div class="download-card">
-                <div class="card-header">
-                    <h3>Maxim to OBS (Adobe)</h3>
-                    <p>Extensión CEP de código cerrado con licencia comercial para la integración bidireccional de Premiere, After Effects y Photoshop.</p>
-                </div>
-                <a href="https://github.com/luisitoys12/maxim-broadcast-release-plugin/raw/main/maxim-to-obs-adobe.zip" class="btn-download btn-orange">Descargar Plugin (.zip)</a>
-            </div>
         </div>
 
-        <!-- Section: Integration Guide -->
-        <h2>Manual de Integración Bidireccional: Maxim to OBS</h2>
-        <div class="doc-section">
-            <div class="doc-step">
-                <h4>1. Instalación de la Extensión de Adobe</h4>
-                <p>
-                    Descomprime el archivo <code>maxim-to-obs-adobe.zip</code> y copia la carpeta <code>maxim-to-obs-adobe</code> dentro del directorio de extensiones comunes de tu sistema:
-                </p>
-                <ol>
-                    <li>En Windows: <code>C:\Program Files (x86)\Common Files\Adobe\CEP\extensions\com.maxim.to.obs</code></li>
-                    <li><em>Nota: Si la carpeta <code>CEP\extensions</code> no existe, puedes crearla de forma manual.</em></li>
-                </ol>
-            </div>
-
-            <div class="doc-step">
-                <h4>2. Configuración de OBS Studio</h4>
-                <p>
-                    Asegúrate de habilitar el servidor WebSocket de OBS Studio desde el menú de herramientas:
-                </p>
-                <ol>
-                    <li>Abre OBS Studio.</li>
-                    <li>Ve a <strong>Herramientas</strong> -> <strong>Ajustes del servidor WebSocket</strong>.</li>
-                    <li>Habilita el servidor y define el puerto (por defecto: <code>4455</code>).</li>
-                </ol>
-            </div>
-
-            <div class="doc-step">
-                <h4>3. Conexión y Activación</h4>
-                <p>
-                    Abre la aplicación de Adobe correspondiente (Premiere Pro, After Effects o Photoshop):
-                </p>
-                <ol>
-                    <li>Ve al menú superior <strong>Ventana</strong> -> <strong>Extensiones</strong> -> <strong>Maxim to OBS</strong>.</li>
-                    <li>Introduce tu clave de licencia comercial en formato <code>MAXIM-XXXX-XXXX-XXXX</code> para activar y desbloquear las herramientas.</li>
-                    <li>Ingresa la dirección IP y puerto del WebSocket de OBS y haz clic en <strong>Conectar</strong>.</li>
-                </ol>
-            </div>
-
-            <div class="doc-step">
-                <h4>4. Operación Bidireccional</h4>
-                <p>
-                    Una vez conectado, puedes interactuar bidireccionalmente con tu transmisión en OBS:
-                </p>
-                <ol>
-                    <li><strong>Enviar Fotograma</strong>: Exporta instantáneamente el lienzo actual de Photoshop o tu composición activa y actualiza automáticamente la fuente <code>MaximFrameSource</code> en OBS.</li>
-                    <li><strong>Marcadores Dinámicos (Timeline Sync)</strong>: Al habilitar esta sincronización, los cambios de escena en OBS Studio inyectarán marcadores automáticamente en la línea de tiempo activa de Adobe Premiere o After Effects.</li>
-                    <li><strong>Control de Reproducción</strong>: Permite a OBS Studio disparar triggers de reproducción y pausa de la secuencia activa de Premiere de forma automática.</li>
-                </ol>
-            </div>
-        </div>
     </div>
 
 </body>
